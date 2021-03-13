@@ -11,7 +11,7 @@ public class LayerStack {
 	}
 	
 	public void PushOverlay(Layer overlay) {
-		layers.insertElementAt(overlay, 0);
+		layers.insertElementAt(overlay,  0);
 	}
 	
 	public void PopLayer(Layer layer) {

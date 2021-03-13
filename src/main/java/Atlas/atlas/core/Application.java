@@ -5,7 +5,6 @@ import Atlas.atlas.events.EventDispatcher;
 import Atlas.atlas.events.EventListener;
 import Atlas.atlas.events.types.WindowCloseEvent;
 import Atlas.atlas.imgui.ImGuiLayer;
-import Atlas.sandbox.ExampleLayer;
 
 public class Application implements EventListener {
 
@@ -37,9 +36,11 @@ public class Application implements EventListener {
 		window.create();
 		
 		layerStack = new LayerStack();
-		
+	}
+	
+	public void init() {
 		imGuiLayer = new ImGuiLayer();
-		pushOverlay(imGuiLayer);
+		pushLayer(imGuiLayer);
 	}
 	
 	public void pushLayer(Layer layer) {
@@ -65,8 +66,11 @@ public class Application implements EventListener {
 		getDelta();
 		
 		while(isRunning) {
+			
 			update();
 			render();
+			
+			window.update();
 			
 			imGuiLayer.begin();
 			for (Layer layer : layerStack.getLayers()) {
@@ -74,10 +78,10 @@ public class Application implements EventListener {
 			}
 			imGuiLayer.end();
 			
-			window.update();
+			
 			window.swapBuffers();
+			
 		}
-		
 		window.dispose();
 	}
 	
