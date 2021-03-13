@@ -4,6 +4,8 @@ import Atlas.atlas.events.Event;
 import Atlas.atlas.events.EventDispatcher;
 import Atlas.atlas.events.EventListener;
 import Atlas.atlas.events.types.WindowCloseEvent;
+import Atlas.atlas.imgui.ImGuiLayer;
+import Atlas.sandbox.ExampleLayer;
 
 public class Application implements EventListener {
 
@@ -19,6 +21,8 @@ public class Application implements EventListener {
 	private boolean isRunning = true;
 	private long lastFrame;
 	
+	private ImGuiLayer imGuiLayer;
+	
 	public Application() {
 		if (instance != null) {
 			System.err.println("Application already exists!");
@@ -33,6 +37,9 @@ public class Application implements EventListener {
 		window.create();
 		
 		layerStack = new LayerStack();
+		
+		imGuiLayer = new ImGuiLayer();
+		pushOverlay(imGuiLayer);
 	}
 	
 	public void pushLayer(Layer layer) {
@@ -60,6 +67,15 @@ public class Application implements EventListener {
 		while(isRunning) {
 			update();
 			render();
+			
+			imGuiLayer.begin();
+			for (Layer layer : layerStack.getLayers()) {
+				layer.onGuiRender();
+			}
+			imGuiLayer.end();
+			
+			window.update();
+			window.swapBuffers();
 		}
 		
 		window.dispose();
@@ -70,8 +86,6 @@ public class Application implements EventListener {
 		for (Layer layer : layerStack.getLayers()) {
 			layer.onUpdate(getDelta());
 		}
-		
-		window.update();
 	}
 	
 	public void render() {
@@ -80,7 +94,7 @@ public class Application implements EventListener {
 			layer.onRender();
 		}
 		
-		window.swapBuffers();
+		
 	}
 	
 	private boolean onWindowClose(WindowCloseEvent e) {
