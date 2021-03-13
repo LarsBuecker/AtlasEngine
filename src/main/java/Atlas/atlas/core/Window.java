@@ -74,7 +74,7 @@ public class Window {
 		mouseButtonCallback = new GLFWMouseButtonCallback() {
 			@Override
 			public void invoke(long window, int button, int action, int mods) {
-				Vec2f pos = Input.getInstance().getMousePosition();
+				Vec2f pos = Input.getMousePosition();
 				
 				if ( action == GLFW.GLFW_PRESS ) {
 					MousePressedEvent mousePressedEvent = new MousePressedEvent(button, (int) pos.getX(), (int) pos.getY());

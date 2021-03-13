@@ -92,7 +92,7 @@ public class ImGuiLayer extends Layer {
 
 	@Override
 	public void onGuiRender() {
-		ImGui.showDemoWindow();
+		//ImGui.showDemoWindow();
 		
 	}
 

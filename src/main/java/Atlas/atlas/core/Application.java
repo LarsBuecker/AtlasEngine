@@ -30,8 +30,6 @@ public class Application implements EventListener {
 		
 		instance = this;
 		
-		Input.getInstance();
-		
 		window = new Window("Atlas", 1280, 720);
 		window.create();
 		
@@ -60,6 +58,10 @@ public class Application implements EventListener {
 		for ( Layer layer : layerStack.getLayers() ) {
 			layer.onEvent(e);
 		}
+	}
+	
+	public void close() {
+		isRunning = false;
 	}
 	
 	public void run() {

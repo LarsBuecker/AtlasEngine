@@ -10,13 +10,7 @@ public class Sandbox {
 		ExampleLayer exampleLayer = new ExampleLayer();
 		app.pushLayer(exampleLayer);
 		
-//		TestLayer testLayer = new TestLayer();
-//		app.pushLayer(testLayer);
-		
-		app.init();
-		
-		
-		
+		app.init();	
 		app.run();
 		
 	}

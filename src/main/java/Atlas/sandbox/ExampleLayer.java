@@ -29,7 +29,6 @@ public class ExampleLayer extends Layer {
 	private VertexArray vertexArray;
 	private Shader shader;
 	private Camera camera;
-	private Input input = Input.getInstance();
 	
 	private Mat4f transform;
 	private Vec3f rot = new Vec3f();
@@ -96,16 +95,16 @@ public class ExampleLayer extends Layer {
 		rot.setZ(rot.getZ() + delta * 0.06f);
 		transform.Rotation(rot);
 		
-		if (input.isKeyPressed(KeyCodes.AL_KEY_A)) {
+		if (Input.isKeyPressed(KeyCodes.AL_KEY_A)) {
 			camera.setPosition(new Vec3f(camera.getPosition().getX() + delta * -0.01f, camera.getPosition().getY(), camera.getPosition().getZ()));
 		}
-		if (input.isKeyPressed(KeyCodes.AL_KEY_D)) {
+		if (Input.isKeyPressed(KeyCodes.AL_KEY_D)) {
 			camera.setPosition(new Vec3f(camera.getPosition().getX() + delta * 0.01f, camera.getPosition().getY(), camera.getPosition().getZ()));
 		}
-		if (input.isKeyPressed(KeyCodes.AL_KEY_W)) {
+		if (Input.isKeyPressed(KeyCodes.AL_KEY_W)) {
 			camera.setPosition(new Vec3f(camera.getPosition().getX(), camera.getPosition().getY(), camera.getPosition().getZ() + delta * 0.01f));
 		}
-		if (input.isKeyPressed(KeyCodes.AL_KEY_S)) {
+		if (Input.isKeyPressed(KeyCodes.AL_KEY_S)) {
 			camera.setPosition(new Vec3f(camera.getPosition().getX(), camera.getPosition().getY(), camera.getPosition().getZ() + delta * -0.01f));
 		}
 		

@@ -4,7 +4,7 @@ import Atlas.atlas.events.Event;
 
 public class KeyEvent extends Event {
 	
-	int keycode;
+	public int keycode;
 
 	protected KeyEvent(int keycode, EventType type) {
 		super(type);
