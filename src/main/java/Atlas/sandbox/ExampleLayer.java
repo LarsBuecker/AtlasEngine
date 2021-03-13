@@ -20,7 +20,7 @@ import Atlas.atlas.opengl.VertexBuffer;
 import Atlas.atlas.renderer.BufferElement;
 import Atlas.atlas.renderer.BufferElement.ShaderDataType;
 import Atlas.atlas.renderer.BufferLayout;
-import Atlas.atlas.renderer.Camera;
+import Atlas.atlas.renderer.OrthographicCamera;
 import Atlas.atlas.renderer.Renderer;
 import Atlas.atlas.renderer.RendererAPI;
 
@@ -28,7 +28,7 @@ public class ExampleLayer extends Layer {
 	
 	private VertexArray vertexArray;
 	private Shader shader;
-	private Camera camera;
+	private OrthographicCamera camera;
 	
 	private Mat4f transform;
 	private Vec3f rot = new Vec3f();
@@ -73,7 +73,7 @@ public class ExampleLayer extends Layer {
 	
 		shader = new Shader(Shader.loadShader("vertex.vs"), Shader.loadShader("fragment.fs"));
 		
-		camera = new Camera();
+		camera = new OrthographicCamera(-1.6f, 1.6f, -0.9f, 0.9f);
 		
 		transform = new Mat4f().Identity();
 	}
@@ -102,10 +102,10 @@ public class ExampleLayer extends Layer {
 			camera.setPosition(new Vec3f(camera.getPosition().getX() + delta * 0.01f, camera.getPosition().getY(), camera.getPosition().getZ()));
 		}
 		if (Input.isKeyPressed(KeyCodes.AL_KEY_W)) {
-			camera.setPosition(new Vec3f(camera.getPosition().getX(), camera.getPosition().getY(), camera.getPosition().getZ() + delta * 0.01f));
+			camera.setPosition(new Vec3f(camera.getPosition().getX(), camera.getPosition().getY() + delta * -0.01f, camera.getPosition().getZ()));
 		}
 		if (Input.isKeyPressed(KeyCodes.AL_KEY_S)) {
-			camera.setPosition(new Vec3f(camera.getPosition().getX(), camera.getPosition().getY(), camera.getPosition().getZ() + delta * -0.01f));
+			camera.setPosition(new Vec3f(camera.getPosition().getX(), camera.getPosition().getY() + delta * 0.01f, camera.getPosition().getZ()));
 		}
 		
 		if(fps>10) {
@@ -135,7 +135,7 @@ public class ExampleLayer extends Layer {
 
 	@Override
 	public void onEvent(Event event) {
-		Log.clientLog(event.toString());
+		
 	}
 	
 }

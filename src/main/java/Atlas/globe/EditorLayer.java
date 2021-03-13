@@ -120,7 +120,20 @@ public class EditorLayer extends Layer {
 		boolean control = Input.isKeyPressed(KeyCodes.AL_KEY_LEFT_CONTROL) | Input.isKeyPressed(KeyCodes.AL_KEY_RIGHT_CONTROL);
 		boolean shift = Input.isKeyPressed(KeyCodes.AL_KEY_LEFT_SHIFT) | Input.isKeyPressed(KeyCodes.AL_KEY_RIGHT_SHIFT);
 		
-		return true;
+		// TODO Implement KeyEvents
+		if ( event.keycode == KeyCodes.AL_KEY_N && control )
+			return true;
+		if ( event.keycode == KeyCodes.AL_KEY_O && control ) 
+			return true;
+		if ( event.keycode == KeyCodes.AL_KEY_S && shift && control ) 
+			return true;
+		if ( event.keycode == KeyCodes.AL_KEY_Q && control ) {
+			Application.getInstance().close();
+			return true;
+		}
+			
+		
+		return false;
 	}
 
 	public static boolean isDockspsaceOpen() {
