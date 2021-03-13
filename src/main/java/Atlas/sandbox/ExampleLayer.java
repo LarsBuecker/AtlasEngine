@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Atlas.atlas.core.Application;
-import Atlas.atlas.core.Input;
-import Atlas.atlas.core.KeyCodes;
 import Atlas.atlas.core.Layer;
 import Atlas.atlas.core.Log;
 import Atlas.atlas.core.Window;
@@ -20,7 +18,7 @@ import Atlas.atlas.opengl.VertexBuffer;
 import Atlas.atlas.renderer.BufferElement;
 import Atlas.atlas.renderer.BufferElement.ShaderDataType;
 import Atlas.atlas.renderer.BufferLayout;
-import Atlas.atlas.renderer.OrthographicCamera;
+import Atlas.atlas.renderer.OrthographicCameraController;
 import Atlas.atlas.renderer.Renderer;
 import Atlas.atlas.renderer.RendererAPI;
 
@@ -28,7 +26,7 @@ public class ExampleLayer extends Layer {
 	
 	private VertexArray vertexArray;
 	private Shader shader;
-	private OrthographicCamera camera;
+	private OrthographicCameraController cameraController;
 	
 	private Mat4f transform;
 	private Vec3f rot = new Vec3f();
@@ -73,7 +71,9 @@ public class ExampleLayer extends Layer {
 	
 		shader = new Shader(Shader.loadShader("vertex.vs"), Shader.loadShader("fragment.fs"));
 		
-		camera = new OrthographicCamera(-1.6f, 1.6f, -0.9f, 0.9f);
+		Window window = Application.getInstance().getWindow();
+		
+		cameraController = new OrthographicCameraController((float) window.getWidth() / (float) window.getHeight());
 		
 		transform = new Mat4f().Identity();
 	}
@@ -95,18 +95,7 @@ public class ExampleLayer extends Layer {
 		rot.setZ(rot.getZ() + delta * 0.06f);
 		transform.Rotation(rot);
 		
-		if (Input.isKeyPressed(KeyCodes.AL_KEY_A)) {
-			camera.setPosition(new Vec3f(camera.getPosition().getX() + delta * -0.01f, camera.getPosition().getY(), camera.getPosition().getZ()));
-		}
-		if (Input.isKeyPressed(KeyCodes.AL_KEY_D)) {
-			camera.setPosition(new Vec3f(camera.getPosition().getX() + delta * 0.01f, camera.getPosition().getY(), camera.getPosition().getZ()));
-		}
-		if (Input.isKeyPressed(KeyCodes.AL_KEY_W)) {
-			camera.setPosition(new Vec3f(camera.getPosition().getX(), camera.getPosition().getY() + delta * -0.01f, camera.getPosition().getZ()));
-		}
-		if (Input.isKeyPressed(KeyCodes.AL_KEY_S)) {
-			camera.setPosition(new Vec3f(camera.getPosition().getX(), camera.getPosition().getY() + delta * 0.01f, camera.getPosition().getZ()));
-		}
+		cameraController.onUpdate(delta);
 		
 		if(fps>10) {
 			Window window = Application.getInstance().getWindow();
@@ -121,7 +110,7 @@ public class ExampleLayer extends Layer {
 		RendererAPI.setClearColor(new Vec4f( 0.1f, 0.1f, 0.1f, 1));
 		RendererAPI.clear();
 		
-		Renderer.BeginScene(camera);
+		Renderer.BeginScene(cameraController.getCamera());
 		shader.bind();
 		shader.UploadUniformFloat3("u_Color", new Vec3f(0.5f, 0.2f, 0.7f));
 		Renderer.submit(shader, vertexArray, transform);
@@ -135,7 +124,7 @@ public class ExampleLayer extends Layer {
 
 	@Override
 	public void onEvent(Event event) {
-		
+		cameraController.onEvent(event);
 	}
 	
 }

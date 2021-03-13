@@ -3,6 +3,7 @@ package Atlas.atlas.core;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowCloseCallback;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
@@ -12,6 +13,7 @@ import Atlas.atlas.events.types.KeyPressedEvent;
 import Atlas.atlas.events.types.KeyReleasedEvent;
 import Atlas.atlas.events.types.MousePressedEvent;
 import Atlas.atlas.events.types.MouseReleasedEvent;
+import Atlas.atlas.events.types.MouseScrolledEvent;
 import Atlas.atlas.events.types.WindowCloseEvent;
 import Atlas.atlas.events.types.WindowResizeEvent;
 import Atlas.atlas.math.Vec2f;
@@ -30,6 +32,7 @@ public class Window {
 	private GLFWWindowCloseCallback windowCloseCallback;
 	private GLFWKeyCallback keyCallback;
 	private GLFWMouseButtonCallback mouseButtonCallback;
+	private GLFWScrollCallback scrollCallback;
 	
 	public Window(String title, int width, int height) {	
 		this.title = title;
@@ -87,10 +90,21 @@ public class Window {
 			}
 		};
 		
+		scrollCallback = new GLFWScrollCallback() {
+
+			@Override
+			public void invoke(long window, double xoffset, double yoffset) {
+				MouseScrolledEvent scrollEvnet = new MouseScrolledEvent((float) xoffset, (float) yoffset);
+				Application.getInstance().onEvent(scrollEvnet);
+			}
+			
+		};
+		
 		GLFW.glfwSetWindowSizeCallback(window, windowSizeCallback);
 		GLFW.glfwSetWindowCloseCallback(window, windowCloseCallback);
 		GLFW.glfwSetKeyCallback(window, keyCallback);
 		GLFW.glfwSetMouseButtonCallback(window, mouseButtonCallback);
+		GLFW.glfwSetScrollCallback(window, scrollCallback);
 	}
 	
 	public void create() {

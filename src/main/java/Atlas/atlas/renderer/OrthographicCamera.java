@@ -14,6 +14,11 @@ public class OrthographicCamera extends Camera {
 		viewProjectionMatrix = projectionMatrix.mul(viewMatrix);
 		position = new Vec3f();
 	}
+	
+	public void setProjection(float left, float right, float top, float bottom) {
+		projectionMatrix.OrthographicProjection(left, right, bottom, top, -1f, 1);
+		viewProjectionMatrix = projectionMatrix.mul(viewMatrix);
+	}
 
 	@Override
 	public void recaculateViewProjectionMatrix() {
