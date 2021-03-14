@@ -9,6 +9,7 @@ public class Renderer {
 	private static SceneData sceneData = new SceneData();
 	
 	public static void init() {
+		RendererAPI.init();
 		Renderer2D.init();
 	}
 	

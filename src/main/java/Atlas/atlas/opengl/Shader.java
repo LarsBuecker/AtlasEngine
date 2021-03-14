@@ -70,6 +70,87 @@ public class Shader {
 	}
 	
 	private int rendererId;
+	
+	private enum ShaderType {
+		vertex, fragment
+	}
+	
+	private ShaderType type;
+	
+	public Shader(String path) {
+		StringBuilder vertexSrc = null;
+		StringBuilder fragmentSrc = null;
+		BufferedReader shaderReader = null;
+		
+		try {
+			shaderReader = new BufferedReader(new FileReader(path));
+			String line;
+			while((line = shaderReader.readLine()) != null ) {
+				String[] tokens = line.split(" ");
+				
+				if(tokens[0].equals("#type")) {
+					Log.coreLog(line);
+					if ( tokens[1].equals("vertex")) {
+						type = ShaderType.vertex;
+						vertexSrc = new StringBuilder();
+					}
+					if ( tokens[1].equals("fragment") ) {
+						type = ShaderType.fragment;
+						fragmentSrc = new StringBuilder();
+					}
+					continue;
+				}
+				switch (type) {
+				case fragment: fragmentSrc.append(line).append("\n"); break;
+				case vertex: vertexSrc.append(line).append("\n"); break;
+				default: System.err.println("Unkown Shadertype"); break;				
+				}
+			}
+			shaderReader.close();
+			Log.coreLog("Shader loaded: " + path);
+			
+			int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+			glShaderSource(vertexShader, vertexSrc.toString());
+			glCompileShader(vertexShader);
+			
+			if ( glGetShaderi(vertexShader, GL_COMPILE_STATUS) == 0 ) {
+				System.err.println(this.getClass().getName() + " " + glGetShaderInfoLog(vertexShader, 1024));
+				glDeleteShader(vertexShader);
+				System.exit(1);
+			}
+			
+			int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+			glShaderSource(fragmentShader, fragmentSrc.toString());
+			glCompileShader(fragmentShader);
+			
+			if ( glGetShaderi(fragmentShader, GL_COMPILE_STATUS) == 0 ) {
+				System.err.println(this.getClass().getName() + " " + glGetShaderInfoLog(fragmentShader, 1024));
+				glDeleteShader(fragmentShader);
+				System.exit(1);
+			}
+			
+			rendererId = glCreateProgram();
+			
+			glAttachShader(rendererId, vertexShader);
+			glAttachShader(rendererId, fragmentShader);
+			
+			glLinkProgram(rendererId);
+			
+			if ( glGetProgrami(rendererId, GL_LINK_STATUS) == 0 ) {
+				System.err.println(this.getClass().getName() + " " + glGetProgramInfoLog(rendererId, 1024));
+				glDeleteProgram(rendererId);
+				System.exit(1);
+			}
+			
+			glDetachShader(rendererId, vertexShader);
+			glDetachShader(rendererId, fragmentShader);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+	}
 
 	public Shader(String vertexSrc, String fragmentSrc) {
 		int vertexShader = glCreateShader(GL_VERTEX_SHADER);

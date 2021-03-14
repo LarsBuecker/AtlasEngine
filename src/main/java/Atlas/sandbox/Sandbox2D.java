@@ -4,6 +4,7 @@ import Atlas.atlas.core.Application;
 import Atlas.atlas.core.Layer;
 import Atlas.atlas.events.Event;
 import Atlas.atlas.math.Vec2f;
+import Atlas.atlas.math.Vec3f;
 import Atlas.atlas.math.Vec4f;
 import Atlas.atlas.renderer.OrthographicCameraController;
 import Atlas.atlas.renderer.Renderer2D;
@@ -53,7 +54,7 @@ public class Sandbox2D extends Layer {
 			}
 		}
 		
-		Renderer2D.drawQuad(new Vec2f(-0.5f, 0.5f), new Vec2f(0.5f, 0.5f), texture);
+		Renderer2D.drawQuad(new Vec3f(0, 0, 0.1f), new Vec2f(10f, 10f), texture);
 		
 		Renderer2D.endScene();
 	}

@@ -35,7 +35,8 @@ public class Renderer2D {
 		data.quadVertexArray.setIndexBuffer(squareIb);
 		
 		data.flatColorShader = new Shader(Shader.loadShader("flatColor.vs"), Shader.loadShader("flatColor.fs"));
-		data.textureShader = new Shader(Shader.loadShader("texture.vs"), Shader.loadShader("texture.fs"));
+//		data.textureShader = new Shader(Shader.loadShader("texture.vs"), Shader.loadShader("texture.fs"));
+		data.textureShader = new Shader("res/shader/texture.glsl");
 		data.textureShader.bind();
 		data.textureShader.UploadUniformInt("u_Texture", 0);
 	}

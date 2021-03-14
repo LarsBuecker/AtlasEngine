@@ -1,11 +1,19 @@
 package Atlas.atlas.renderer;
 
 import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
 
 import Atlas.atlas.math.Vec4f;
 import Atlas.atlas.opengl.VertexArray;
 
 public class RendererAPI {
+	
+	public static void init() {
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
+		glEnable(GL_DEPTH_TEST);
+	}
 
 	public static void setClearColor(Vec4f color) {
 		GL11.glClearColor(color.getX(), color.getY(), color.getZ(), color.getW());
