@@ -20,6 +20,9 @@ public class Application implements EventListener {
 	
 	private boolean isRunning = true;
 	private long lastFrame;
+	private int fps;
+	private long lastFPS;
+	private int fps_out;
 	
 	private ImGuiLayer imGuiLayer;
 	
@@ -69,6 +72,7 @@ public class Application implements EventListener {
 	
 	public void run() {
 		getDelta();
+		lastFPS = getTime();
 		
 		while(isRunning) {
 			
@@ -95,6 +99,8 @@ public class Application implements EventListener {
 		for (Layer layer : layerStack.getLayers()) {
 			layer.onUpdate(getDelta());
 		}
+		
+		updateFPS();
 	}
 	
 	public void render() {
@@ -123,7 +129,20 @@ public class Application implements EventListener {
 	    return delta;
 	}
 	
+	public void updateFPS() {
+	    if (getTime() - lastFPS > 1000) {
+	    	fps_out = fps;
+	        fps = 0; //reset the FPS counter
+	        lastFPS += 1000; //add one second
+	    }
+	    fps++;
+	}
+	
 	public Window getWindow() {
 		return window;
+	}
+
+	public int getFPS() {
+		return fps_out;
 	}
 }

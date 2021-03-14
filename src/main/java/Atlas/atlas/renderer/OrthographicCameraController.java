@@ -18,20 +18,20 @@ public class OrthographicCameraController {
 	
 	private Vec3f cameraPosition;
 	private float cameraRotation = 0;
-	private float cameraTranslationSpeed = 0.001f;
+	private float cameraTranslationSpeed = 0.01f;
 	private float cameraRotationSpeed = 1f;
 	
 	public OrthographicCameraController(float aspectRatio, boolean rotation) {
 		this.cameraPosition = new Vec3f();
 		this.aspectRatio = aspectRatio;
 		this.rotation = rotation;
-		camera = new OrthographicCamera(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
+		camera = new OrthographicCamera(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, zoomLevel, -zoomLevel);
 	}
 	
 	public OrthographicCameraController(float aspectRatio) {
 		this.cameraPosition = new Vec3f();
 		this.aspectRatio = aspectRatio;
-		camera = new OrthographicCamera(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
+		camera = new OrthographicCamera(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, zoomLevel, -zoomLevel);
 	}
 	
 	public void onUpdate(float delta) {
@@ -42,10 +42,10 @@ public class OrthographicCameraController {
 			cameraPosition = cameraPosition.add(new Vec3f(delta * cameraTranslationSpeed, 0, 0));
 		}
 		if (Input.isKeyPressed(KeyCodes.AL_KEY_W)) {
-			cameraPosition = cameraPosition.add(new Vec3f(0, delta * -cameraTranslationSpeed, 0));
+			cameraPosition = cameraPosition.add(new Vec3f(0, delta * cameraTranslationSpeed, 0));
 		}
 		if (Input.isKeyPressed(KeyCodes.AL_KEY_S)) {
-			cameraPosition = cameraPosition.add(new Vec3f(0, delta * cameraTranslationSpeed, 0));
+			cameraPosition = cameraPosition.add(new Vec3f(0, delta * -cameraTranslationSpeed, 0));
 		}
 		
 //		Log.clientLog(cameraPosition.toString());
@@ -72,13 +72,13 @@ public class OrthographicCameraController {
 	private boolean onMouseScrolled(MouseScrolledEvent e) {
 		zoomLevel -= e.yOffset;
 		if ( zoomLevel < 0.01f ) zoomLevel = 0.01f;
-		camera.setProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
+		camera.setProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, zoomLevel, -zoomLevel);
 		return false;
 	}
 	
 	private boolean onWindowResize(WindowResizeEvent e) {
 		aspectRatio = (float) e.getWidth() / (float) e.getHeight();
-		camera.setProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
+		camera.setProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, zoomLevel, -zoomLevel);
 		return false;
 	}
 

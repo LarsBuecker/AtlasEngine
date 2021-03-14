@@ -1,22 +1,14 @@
 package Atlas.sandbox;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import Atlas.atlas.core.Application;
 import Atlas.atlas.core.Layer;
 import Atlas.atlas.events.Event;
 import Atlas.atlas.math.Vec2f;
 import Atlas.atlas.math.Vec4f;
-import Atlas.atlas.opengl.IndexBuffer;
-import Atlas.atlas.opengl.Shader;
-import Atlas.atlas.opengl.VertexArray;
-import Atlas.atlas.opengl.VertexBuffer;
-import Atlas.atlas.renderer.BufferElement;
-import Atlas.atlas.renderer.BufferElement.ShaderDataType;
-import Atlas.atlas.renderer.BufferLayout;
 import Atlas.atlas.renderer.OrthographicCameraController;
 import Atlas.atlas.renderer.Renderer2D;
 import Atlas.atlas.renderer.RendererAPI;
+import Atlas.atlas.renderer.Texture2D;
 import imgui.ImGui;
 
 public class Sandbox2D extends Layer {
@@ -28,10 +20,12 @@ public class Sandbox2D extends Layer {
 	private OrthographicCameraController cameraController;
 	
 	private float[] squareCol = { 0.1f, 0.1f, 0.9f, 1 };
+	private Texture2D texture;
 
 	@Override
 	public void OnAttach() {
 		cameraController = new OrthographicCameraController(16f / 9f);
+		texture = new Texture2D("res/checkerboard.png");
 	}
 
 	@Override
@@ -42,6 +36,7 @@ public class Sandbox2D extends Layer {
 	@Override
 	public void onUpdate(float delta) {
 		cameraController.onUpdate(delta);
+		Application.getInstance().getWindow().setTitle(getName() + " | FPS: " + Application.getInstance().getFPS());
 	}
 
 	@Override
@@ -51,6 +46,15 @@ public class Sandbox2D extends Layer {
 		
 		Renderer2D.beginScene(cameraController.getCamera());
 		Renderer2D.drawQuad(new Vec2f(1, 0), new Vec2f(2, 0.5f), new Vec4f(squareCol[0], squareCol[1], squareCol[2], squareCol[3]));
+		
+		for( int i = 0; i < 50; i++ ) {
+			for ( int j = 0; j < 50; j++ ) {
+				Renderer2D.drawQuad(new Vec2f(0.4f * i, 0.4f * j), new Vec2f(0.3f, 0.3f), new Vec4f(squareCol[0], squareCol[1], squareCol[2], squareCol[3]));
+			}
+		}
+		
+		Renderer2D.drawQuad(new Vec2f(-0.5f, 0.5f), new Vec2f(0.5f, 0.5f), texture);
+		
 		Renderer2D.endScene();
 	}
 
