@@ -42,7 +42,6 @@ public class Renderer2D {
 	public static void beginScene(OrthographicCamera camera) {
 		data.flatColorShader.bind();
 		data.flatColorShader.UploadUniformMat4("u_ViewProjection", camera.getViewProjectionMatrix());
-		data.flatColorShader.UploadUniformMat4("u_Transform", new Mat4f().Identity());
 	}
 	
 	public static void endScene() {
@@ -51,13 +50,17 @@ public class Renderer2D {
 	
 	// Prinmitives 
 	
-	public static void drawQuad(Vec2f position, Vec2f scale, Vec4f color) {
-		drawQuad(new Vec3f(position.getX(), position.getY(), 0), scale, color);
+	public static void drawQuad(Vec2f position, Vec2f size, Vec4f color) {
+		drawQuad(new Vec3f(position.getX(), position.getY(), 0), size, color);
 	}
 	
-	public static void drawQuad(Vec3f position, Vec2f scale, Vec4f color) {
+	public static void drawQuad(Vec3f position, Vec2f size, Vec4f color) {
 		data.flatColorShader.bind();
 		data.flatColorShader.UploadUniformFloat4("u_Color", color);
+		
+		Mat4f transform = new Mat4f().Translation(position);
+		transform = transform.mul(new Mat4f().Scaling(new Vec3f(size.getX(), size.getY(), 0)));
+		data.flatColorShader.UploadUniformMat4("u_Transform", transform);
 		
 		data.quadVertexArray.bind();
 		RendererAPI.drawIndexed(data.quadVertexArray);
