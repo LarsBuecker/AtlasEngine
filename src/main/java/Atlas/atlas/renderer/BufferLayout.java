@@ -21,9 +21,10 @@ public class BufferLayout {
 		return stride;
 	}
 	
-	public void addElement(BufferElement element) {
+	public BufferLayout addElement(BufferElement element) {
 		elements.add(element);
 		calculateOffsetAndStride();
+		return this;
 	}
 	
 	public List<BufferElement> getElements() {

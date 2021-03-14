@@ -5,6 +5,7 @@ import Atlas.atlas.events.EventDispatcher;
 import Atlas.atlas.events.EventListener;
 import Atlas.atlas.events.types.WindowCloseEvent;
 import Atlas.atlas.imgui.ImGuiLayer;
+import Atlas.atlas.renderer.Renderer;
 
 public class Application implements EventListener {
 
@@ -32,6 +33,8 @@ public class Application implements EventListener {
 		
 		window = new Window("Atlas", 1280, 720);
 		window.create();
+		
+		Renderer.init();
 		
 		layerStack = new LayerStack();
 	}

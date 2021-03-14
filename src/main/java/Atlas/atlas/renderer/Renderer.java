@@ -8,6 +8,10 @@ public class Renderer {
 
 	private static SceneData sceneData = new SceneData();
 	
+	public static void init() {
+		Renderer2D.init();
+	}
+	
 	public static void BeginScene(Camera camera) {
 		sceneData.ViewProjectionMatrix = camera.getViewProjectionMatrix();
 	}
