@@ -16,35 +16,39 @@ public class OrthographicCameraController {
 	private OrthographicCamera camera;
 	private boolean rotation = false;
 	
-	private Vec3f cameraPosition = new Vec3f();
+	private Vec3f cameraPosition;
 	private float cameraRotation = 0;
-	private float cameraTranslationSpeed = 1f;
+	private float cameraTranslationSpeed = 0.001f;
 	private float cameraRotationSpeed = 1f;
 	
 	public OrthographicCameraController(float aspectRatio, boolean rotation) {
+		this.cameraPosition = new Vec3f();
 		this.aspectRatio = aspectRatio;
 		this.rotation = rotation;
 		camera = new OrthographicCamera(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
 	}
 	
 	public OrthographicCameraController(float aspectRatio) {
+		this.cameraPosition = new Vec3f();
 		this.aspectRatio = aspectRatio;
 		camera = new OrthographicCamera(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
 	}
 	
 	public void onUpdate(float delta) {
 		if (Input.isKeyPressed(KeyCodes.AL_KEY_A)) {
-			cameraPosition.add(new Vec3f(delta * -cameraTranslationSpeed, 0, 0));
+			cameraPosition = cameraPosition.add(new Vec3f(delta * -cameraTranslationSpeed, 0, 0));
 		}	
 		if (Input.isKeyPressed(KeyCodes.AL_KEY_D)) {
-			cameraPosition.add(new Vec3f(delta * cameraTranslationSpeed, 0, 0));
+			cameraPosition = cameraPosition.add(new Vec3f(delta * cameraTranslationSpeed, 0, 0));
 		}
 		if (Input.isKeyPressed(KeyCodes.AL_KEY_W)) {
-			cameraPosition.add(new Vec3f(0, delta * -cameraTranslationSpeed, 0));
+			cameraPosition = cameraPosition.add(new Vec3f(0, delta * -cameraTranslationSpeed, 0));
 		}
 		if (Input.isKeyPressed(KeyCodes.AL_KEY_S)) {
-			cameraPosition.add(new Vec3f(cameraPosition.getX() + delta * cameraTranslationSpeed, 0, 0));
+			cameraPosition = cameraPosition.add(new Vec3f(0, delta * cameraTranslationSpeed, 0));
 		}
+		
+//		Log.clientLog(cameraPosition.toString());
 		
 		if(rotation) {
 			if( Input.isKeyPressed(KeyCodes.AL_KEY_Q) ) {
@@ -67,6 +71,7 @@ public class OrthographicCameraController {
 	
 	private boolean onMouseScrolled(MouseScrolledEvent e) {
 		zoomLevel -= e.yOffset;
+		if ( zoomLevel < 0.01f ) zoomLevel = 0.01f;
 		camera.setProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
 		return false;
 	}

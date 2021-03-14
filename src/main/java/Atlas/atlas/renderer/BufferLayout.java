@@ -1,5 +1,6 @@
 package Atlas.atlas.renderer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BufferLayout {
@@ -7,7 +8,9 @@ public class BufferLayout {
 	private List<BufferElement> elements;
 	private int stride = 0;
 
-	public BufferLayout() {	}
+	public BufferLayout() {	
+		this.elements = new ArrayList<BufferElement>();
+	}
 	
 	public BufferLayout(List<BufferElement> elements) {
 		this.elements = elements;
@@ -16,6 +19,11 @@ public class BufferLayout {
 	
 	public int getStride() {
 		return stride;
+	}
+	
+	public void addElement(BufferElement element) {
+		elements.add(element);
+		calculateOffsetAndStride();
 	}
 	
 	public List<BufferElement> getElements() {
