@@ -2,7 +2,6 @@ package Atlas.atlas.renderer;
 
 import org.lwjgl.opengl.GL11;
 
-import Atlas.atlas.core.Log;
 import Atlas.atlas.math.Mat4f;
 import Atlas.atlas.math.Vec2f;
 import Atlas.atlas.math.Vec3f;
