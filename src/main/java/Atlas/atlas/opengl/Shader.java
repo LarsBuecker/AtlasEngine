@@ -89,7 +89,6 @@ public class Shader {
 				String[] tokens = line.split(" ");
 				
 				if(tokens[0].equals("#type")) {
-					Log.coreLog(line);
 					if ( tokens[1].equals("vertex")) {
 						type = ShaderType.vertex;
 						vertexSrc = new StringBuilder();

@@ -1,5 +1,9 @@
 package Atlas.atlas.renderer;
 
+import java.nio.ByteBuffer;
+
+import org.lwjgl.BufferUtils;
+
 import Atlas.atlas.math.Mat4f;
 import Atlas.atlas.math.Vec2f;
 import Atlas.atlas.math.Vec3f;
@@ -34,8 +38,12 @@ public class Renderer2D {
 		IndexBuffer squareIb = new IndexBuffer(squareIndices, squareIndices.length);
 		data.quadVertexArray.setIndexBuffer(squareIb);
 		
-		data.flatColorShader = new Shader(Shader.loadShader("flatColor.vs"), Shader.loadShader("flatColor.fs"));
-//		data.textureShader = new Shader(Shader.loadShader("texture.vs"), Shader.loadShader("texture.fs"));
+		data.whiteTexture = new Texture2D(1, 1);
+		int whiteTexData = 0xFFFFFFFF;
+		ByteBuffer TexData = BufferUtils.createByteBuffer(8 * 4);
+		TexData.putInt(whiteTexData);
+		data.whiteTexture.setData(TexData, 0);
+		
 		data.textureShader = new Shader("res/shader/texture.glsl");
 		data.textureShader.bind();
 		data.textureShader.UploadUniformInt("u_Texture", 0);
@@ -46,9 +54,6 @@ public class Renderer2D {
 	}
 	
 	public static void beginScene(OrthographicCamera camera) {
-		data.flatColorShader.bind();
-		data.flatColorShader.UploadUniformMat4("u_ViewProjection", camera.getViewProjectionMatrix());
-		
 		data.textureShader.bind();
 		data.textureShader.UploadUniformMat4("u_ViewProjection", camera.getViewProjectionMatrix());
 	}
@@ -64,12 +69,12 @@ public class Renderer2D {
 	}
 	
 	public static void drawQuad(Vec3f position, Vec2f size, Vec4f color) {
-		data.flatColorShader.bind();
-		data.flatColorShader.UploadUniformFloat4("u_Color", color);
+		data.textureShader.UploadUniformFloat4("u_Color", color);
+		data.whiteTexture.bind(0);
 		
 		Mat4f transform = new Mat4f().Translation(position);
 		transform = transform.mul(new Mat4f().Scaling(new Vec3f(size.getX(), size.getY(), 0)));
-		data.flatColorShader.UploadUniformMat4("u_Transform", transform);
+		data.textureShader.UploadUniformMat4("u_Transform", transform);
 		
 		data.quadVertexArray.bind();
 		RendererAPI.drawIndexed(data.quadVertexArray);
@@ -80,7 +85,7 @@ public class Renderer2D {
 	}
 	
 	public static void drawQuad(Vec3f position, Vec2f size, Texture2D texture) {
-		data.textureShader.bind();
+		data.textureShader.UploadUniformFloat4("u_Color", new Vec4f(1, 1, 1, 1));
 		texture.bind(0);
 		
 		Mat4f transform = new Mat4f().Translation(position);

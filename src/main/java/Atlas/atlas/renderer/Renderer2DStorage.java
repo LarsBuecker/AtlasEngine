@@ -6,7 +6,7 @@ import Atlas.atlas.opengl.VertexArray;
 public class Renderer2DStorage {
 
 	public VertexArray quadVertexArray;
-	public Shader flatColorShader;
 	public Shader textureShader;
+	public Texture2D whiteTexture;
 	
 }
