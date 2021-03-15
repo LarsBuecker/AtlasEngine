@@ -47,8 +47,8 @@ public class Sandbox2D extends Layer {
 		Renderer2D.beginScene(cameraController.getCamera());
 //		Renderer2D.drawQuad(new Vec2f(-1.2f, 0), new Vec2f(2, 1.5f), new Vec4f(0.8f, 0.2f, 0.1f, 1.0f));
 		
-		for( int i = 0; i < 4; i++ ) {
-			for ( int j = 0; j < 4; j++ ) {
+		for( int i = 0; i < 100; i++ ) {
+			for ( int j = 0; j < 100	; j++ ) {
 				Renderer2D.drawQuad(new Vec2f(1f * i, 1f * j), new Vec2f(0.5f, 0.5f), new Vec4f(squareCol[0], squareCol[1], squareCol[2], squareCol[3]));
 			}
 		}

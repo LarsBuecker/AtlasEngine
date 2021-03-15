@@ -7,6 +7,7 @@ import Atlas.atlas.opengl.VertexBuffer;
 public class Renderer2DStorage {
 	
 	public int maxQuads = 10000;
+	public int maxVerts = maxQuads * 4;
 	public int maxIndices = maxQuads * 6;
 
 	public VertexArray quadVertexArray;

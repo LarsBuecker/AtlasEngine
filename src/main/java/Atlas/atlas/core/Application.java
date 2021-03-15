@@ -89,7 +89,6 @@ public class Application implements EventListener {
 			
 			
 			window.swapBuffers();
-			
 		}
 		window.dispose();
 	}

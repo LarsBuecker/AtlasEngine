@@ -3,7 +3,7 @@
 
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec4 a_Color;
-layout(location = 1) in vec2 a_TexCoord;
+layout(location = 2) in vec2 a_TexCoord;
 
 uniform mat4 u_ViewProjection;
 
@@ -28,6 +28,6 @@ uniform float u_TilingFactor;
 uniform sampler2D u_Texture;
 
 void main() {
-	color = v_Color;
+	color = texture(u_Texture, v_TexCoord * u_TilingFactor) * v_Color;
 	//color = texture(u_Texture, v_TexCoord * u_TilingFactor) * u_Color;
 }

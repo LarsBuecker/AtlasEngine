@@ -23,13 +23,6 @@ public class Renderer2D {
 		data = new Renderer2DStorage();
 		data.quadVertexArray = new VertexArray();
 		
-//		float square[] = {
-//			-0.5f, -0.5f, 0.0f, 0, 0,
-//			 0.5f, -0.5f, 0.0f, 1, 0,
-//			 0.5f,  0.5f, 0.0f, 1, 1,
-//			-0.5f,  0.5f, 0.0f, 0, 1
-//		};
-//		VertexBuffer squareBuffer = new VertexBuffer(square);
 		data.quadVertexBuffer = new VertexBuffer(data.maxQuads * 9);
 		BufferLayout layout = new BufferLayout().addElement(new BufferElement(ShaderDataType.Float3, "a_Position", false));
 		layout.addElement(new BufferElement(ShaderDataType.Float4, "a_Color", false));
@@ -37,7 +30,7 @@ public class Renderer2D {
 		data.quadVertexBuffer.setBufferLayout(layout);
 		data.quadVertexArray.addVertexBuffer(data.quadVertexBuffer);
 		
-//		int squareIndices[] = {0, 1, 2, 2, 3, 0 };
+		// Indice generation
 		int quadIndices[] = new int[data.maxIndices];
 		int offset = 0;
 		for ( int i = 0; i < data.maxIndices; i += 6) {
@@ -68,7 +61,8 @@ public class Renderer2D {
 	
 	public static void beginScene(OrthographicCamera camera) {
 		data.vertIndex = 0;
-		data.vertQueue = new float[data.maxQuads * 6];
+		data.vertCount = 0;
+		data.vertQueue = new float[data.maxVerts * 9];
 		data.textureShader.bind();
 		data.textureShader.UploadUniformMat4("u_ViewProjection", camera.getViewProjectionMatrix());
 	}
@@ -81,7 +75,7 @@ public class Renderer2D {
 	}
 	
 	public static void flush() {
-		RendererAPI.drawIndexed(data.quadVertexArray, data.vertCount);
+		RendererAPI.drawIndexed(data.quadVertexArray, data.vertQueue.length * 4);
 	}
 	
 	// Prinmitives 
@@ -138,16 +132,7 @@ public class Renderer2D {
 		
 		data.vertCount += 6;
 		
-//		data.textureShader.UploadUniformFloat4("u_Color", color);
-//		data.textureShader.UploadUniformFloat("u_TilingFactor", 1f);
 		data.whiteTexture.bind(0);
-		
-//		Mat4f transform = new Mat4f().Translation(position);
-//		transform = transform.mul(new Mat4f().Scaling(new Vec3f(size.getX(), size.getY(), 0)));
-//		data.textureShader.UploadUniformMat4("u_Transform", transform);
-//		
-//		data.quadVertexArray.bind();
-//		RendererAPI.drawIndexed(data.quadVertexArray);
 	}
 	
 	public static void drawQuad(Vec2f position, Vec2f size, Texture2D texture, float tiling, Vec4f tintColor) {
@@ -155,17 +140,55 @@ public class Renderer2D {
 	}
 	
 	public static void drawQuad(Vec3f position, Vec2f size, Texture2D texture, float tiling, Vec4f tintColor) {
-		data.textureShader.UploadUniformFloat4("u_Color", tintColor);
+		
+		data.vertQueue[data.vertIndex + 0] = position.getX();
+		data.vertQueue[data.vertIndex + 1] = position.getY();
+		data.vertQueue[data.vertIndex + 2] = position.getZ();
+		data.vertQueue[data.vertIndex + 3] = tintColor.getX();
+		data.vertQueue[data.vertIndex + 4] = tintColor.getY();
+		data.vertQueue[data.vertIndex + 5] = tintColor.getZ();
+		data.vertQueue[data.vertIndex + 6] = tintColor.getW();
+		data.vertQueue[data.vertIndex + 7] = 0;
+		data.vertQueue[data.vertIndex + 8] = 0;
+		data.vertIndex += 9;
+		
+		data.vertQueue[data.vertIndex + 0] = position.getX() +  size.getX();
+		data.vertQueue[data.vertIndex + 1] = position.getY();
+		data.vertQueue[data.vertIndex + 2] = position.getZ();
+		data.vertQueue[data.vertIndex + 3] = tintColor.getX();
+		data.vertQueue[data.vertIndex + 4] = tintColor.getY();
+		data.vertQueue[data.vertIndex + 5] = tintColor.getZ();
+		data.vertQueue[data.vertIndex + 6] = tintColor.getW();
+		data.vertQueue[data.vertIndex + 7] = 1;
+		data.vertQueue[data.vertIndex + 8] = 0;
+		data.vertIndex += 9;
+		
+		data.vertQueue[data.vertIndex + 0] = position.getX() + size.getX();
+		data.vertQueue[data.vertIndex + 1] = position.getY() + size.getY();
+		data.vertQueue[data.vertIndex + 2] = position.getZ();
+		data.vertQueue[data.vertIndex + 3] = tintColor.getX();
+		data.vertQueue[data.vertIndex + 4] = tintColor.getY();
+		data.vertQueue[data.vertIndex + 5] = tintColor.getZ();
+		data.vertQueue[data.vertIndex + 6] = tintColor.getW();
+		data.vertQueue[data.vertIndex + 7] = 1;
+		data.vertQueue[data.vertIndex + 8] = 1;
+		data.vertIndex += 9;
+		
+		data.vertQueue[data.vertIndex + 0] = position.getX();
+		data.vertQueue[data.vertIndex + 1] = position.getY() + size.getY();
+		data.vertQueue[data.vertIndex + 2] = position.getZ();
+		data.vertQueue[data.vertIndex + 3] = tintColor.getX();
+		data.vertQueue[data.vertIndex + 4] = tintColor.getY();
+		data.vertQueue[data.vertIndex + 5] = tintColor.getZ();
+		data.vertQueue[data.vertIndex + 6] = tintColor.getW();
+		data.vertQueue[data.vertIndex + 7] = 0;
+		data.vertQueue[data.vertIndex + 8] = 1;
+		data.vertIndex += 9;
+		
+		data.vertCount += 6;
+		
 		data.textureShader.UploadUniformFloat("u_TilingFactor", tiling);
 		texture.bind(0);
-		
-		Mat4f transform = new Mat4f().Translation(position);
-		transform = transform.mul(new Mat4f().Scaling(new Vec3f(size.getX(), size.getY(), 0)));
-		data.textureShader.UploadUniformMat4("u_Transform", transform);
-		
-		data.quadVertexArray.bind();
-		RendererAPI.drawIndexed(data.quadVertexArray);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 	}
 
 	
