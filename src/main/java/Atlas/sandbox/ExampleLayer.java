@@ -51,8 +51,7 @@ public class ExampleLayer extends Layer {
 		 	-0.5f,  0.5f, 0.0f, 0.3f, 0.8f, 0.5f, 1.0f
 		};
 		
-		VertexBuffer vertexBuffer = new VertexBuffer(square, 3);
-		
+		VertexBuffer vertexBuffer = new VertexBuffer(square);
 		BufferElement position = new BufferElement(ShaderDataType.Float3, "a_Position", false);
 		BufferElement color = new BufferElement(ShaderDataType.Float4, "a_Color", false);
 		List<BufferElement> elementList = new ArrayList<BufferElement>();

@@ -9,6 +9,8 @@ import static org.lwjgl.opengl.GL15.glGenBuffers;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL45;
 
 import Atlas.atlas.renderer.BufferLayout;
 
@@ -17,11 +19,22 @@ public class VertexBuffer {
 	private int rendererId;
 	BufferLayout layout;
 	
-	public VertexBuffer(float[] vertices, int size) {
+	public VertexBuffer(float[] vertices) {
 		rendererId = glGenBuffers();
 		bind();
 		FloatBuffer buffer = storeDataInFloatBuffer(vertices);
 		glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
+	}
+	
+	public VertexBuffer(int size) {
+		rendererId = glGenBuffers();
+		bind();
+		glBufferData(GL_ARRAY_BUFFER, size, GL15.GL_DYNAMIC_DRAW);
+	}
+	
+	public void setData(FloatBuffer buffer) {
+		bind();
+		GL45.glBufferSubData(rendererId, 0, buffer);
 	}
 	
 	public void bind() {
@@ -47,4 +60,5 @@ public class VertexBuffer {
 		buffer.flip();
 		return buffer;
 	}
+
 }

@@ -26,4 +26,8 @@ public class RendererAPI {
 	public static void drawIndexed(VertexArray vertexArray) {
 		GL11.glDrawElements(GL11.GL_TRIANGLES, vertexArray.getIndexBuffer().getCount(), GL11.GL_UNSIGNED_INT, 0);
 	}
+	
+	public static void drawIndexed(VertexArray vertexArray, int count) {
+		GL11.glDrawElements(GL11.GL_TRIANGLES, count, GL11.GL_UNSIGNED_INT, 0);
+	}
 }
