@@ -54,7 +54,8 @@ public class Sandbox2D extends Layer {
 			}
 		}
 		
-		Renderer2D.drawQuad(new Vec3f(0, 0, 0.1f), new Vec2f(10f, 10f), texture);
+		Renderer2D.drawQuad(new Vec3f(0, 0, 0.1f), new Vec2f(10f, 10f), texture, 10, new Vec4f(1, 1, 1, 1));
+		Renderer2D.drawRotatedQuad(new Vec2f(-2, -1), new Vec2f(1, 1), 45, new Vec4f(0.1f, 0.7f, 0.3f, 1.0f));
 		
 		Renderer2D.endScene();
 	}

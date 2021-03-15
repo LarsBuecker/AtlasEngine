@@ -35,13 +35,7 @@ public class Renderer2D {
 		int squareIndices[] = {0, 1, 2, 2, 3, 0 };
 		IndexBuffer squareIb = new IndexBuffer(squareIndices, squareIndices.length);
 		data.quadVertexArray.setIndexBuffer(squareIb);
-		
-//		data.whiteTexture = new Texture2D(1, 1);
-//		int whiteTexData = 0xFFFFFFFF;
-//		ByteBuffer TexData = BufferUtils.createByteBuffer(8 * 4);
-//		TexData.putInt(whiteTexData);
-//		Log.coreLog();
-//		data.whiteTexture.setData(TexData, 0);
+
 		data.whiteTexture = new Texture2D("res/default.png");
 		
 		data.textureShader = new Shader("res/shader/texture.glsl");
@@ -72,6 +66,7 @@ public class Renderer2D {
 	
 	public static void drawQuad(Vec3f position, Vec2f size, Vec4f color) {
 		data.textureShader.UploadUniformFloat4("u_Color", color);
+		data.textureShader.UploadUniformFloat("u_TilingFactor", 1f);
 		data.whiteTexture.bind(0);
 		
 		Mat4f transform = new Mat4f().Translation(position);
@@ -80,18 +75,56 @@ public class Renderer2D {
 		
 		data.quadVertexArray.bind();
 		RendererAPI.drawIndexed(data.quadVertexArray);
-		
 	}
 	
-	public static void drawQuad(Vec2f position, Vec2f size, Texture2D texture) {
-		drawQuad(new Vec3f(position.getX(), position.getY(), 0), size, texture);
+	public static void drawQuad(Vec2f position, Vec2f size, Texture2D texture, float tiling, Vec4f tintColor) {
+		drawQuad(new Vec3f(position.getX(), position.getY(), 0), size, texture, tiling, tintColor);
 	}
 	
-	public static void drawQuad(Vec3f position, Vec2f size, Texture2D texture) {
-		data.textureShader.UploadUniformFloat4("u_Color", new Vec4f(1, 1, 1, 1));
+	public static void drawQuad(Vec3f position, Vec2f size, Texture2D texture, float tiling, Vec4f tintColor) {
+		data.textureShader.UploadUniformFloat4("u_Color", tintColor);
+		data.textureShader.UploadUniformFloat("u_TilingFactor", tiling);
 		texture.bind(0);
 		
 		Mat4f transform = new Mat4f().Translation(position);
+		transform = transform.mul(new Mat4f().Scaling(new Vec3f(size.getX(), size.getY(), 0)));
+		data.textureShader.UploadUniformMat4("u_Transform", transform);
+		
+		data.quadVertexArray.bind();
+		RendererAPI.drawIndexed(data.quadVertexArray);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+	}
+
+	
+	public static void drawRotatedQuad(Vec2f position, Vec2f size, float rotation, Vec4f color) {
+		drawRotatedQuad(new Vec3f( position.getX(), position.getY(), 0), size, rotation, color);
+	}
+	
+	public static void drawRotatedQuad(Vec3f position, Vec2f size, float rotation, Vec4f color) {
+		data.textureShader.UploadUniformFloat4("u_Color", color);
+		data.textureShader.UploadUniformFloat("u_TilingFactor", 1f);
+		data.whiteTexture.bind(0);
+		
+		Mat4f transform = new Mat4f().Translation(position);
+		transform = transform.mul(new Mat4f().Rotation(new Vec3f(0, 0, rotation)));
+		transform = transform.mul(new Mat4f().Scaling(new Vec3f(size.getX(), size.getY(), 0)));
+		data.textureShader.UploadUniformMat4("u_Transform", transform);
+		
+		data.quadVertexArray.bind();
+		RendererAPI.drawIndexed(data.quadVertexArray);
+	}
+	
+	public static void drawRotatedQuad(Vec2f position, Vec2f size, float rotation, Texture2D texture, float tiling) {
+		drawRotatedQuad(new Vec3f(position.getX(), position.getY(), 0), size, rotation, texture, tiling);
+	}
+	
+	public static void drawRotatedQuad(Vec3f position, Vec2f size, float rotation, Texture2D texture, float tiling) {
+		data.textureShader.UploadUniformFloat4("u_Color", new Vec4f(1, 1, 1, 1));
+		data.textureShader.UploadUniformFloat("u_TilingFactor", tiling);
+		texture.bind(0);
+		
+		Mat4f transform = new Mat4f().Translation(position);
+		transform = transform.mul(new Mat4f().Rotation(new Vec3f(0, 0, rotation)));
 		transform = transform.mul(new Mat4f().Scaling(new Vec3f(size.getX(), size.getY(), 0)));
 		data.textureShader.UploadUniformMat4("u_Transform", transform);
 		
