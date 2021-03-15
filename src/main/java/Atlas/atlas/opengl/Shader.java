@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL45;
 
 import Atlas.atlas.core.Log;
 import Atlas.atlas.math.Mat4f;
@@ -199,6 +200,11 @@ public class Shader {
 	public void UploadUniformInt(String name, int value) {
 		int location = glGetUniformLocation(rendererId, name);
 		glUniform1i(location, value);
+	}
+	
+	public void UploadUniformIntArray(String name, int[] values) {
+		int location = glGetUniformLocation(rendererId, name);
+		GL45.glUniform1iv(location, values);
 	}
 	
 	public void UploadUniformFloat(String name, float value) {

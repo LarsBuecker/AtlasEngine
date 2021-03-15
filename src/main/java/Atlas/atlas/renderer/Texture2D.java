@@ -111,4 +111,8 @@ public class Texture2D {
 	public int getRendererId() {
 		return rendererId;
 	}	
+	
+	public boolean equal(Texture2D other) {
+		return this.rendererId == other.rendererId;
+	}
 }
