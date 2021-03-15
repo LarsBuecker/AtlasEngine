@@ -14,6 +14,13 @@ public class Vec4f {
 		setW(0);
 	}
 	
+	public Vec4f(float v) {
+		setX(v);
+		setY(v);
+		setZ(v);
+		setW(v);
+	}
+	
 	public Vec4f(float x, float y, float z, float w) {
 		setX(x);
 		setY(y);

@@ -10,6 +10,11 @@ public class Vec2i {
 		this.y = 0;
 	}
 	
+	public Vec2i(int v) {
+		this.x = v;
+		this.y = v;
+	}
+	
 	public Vec2i(int x, int y) {
 		this.x = x;
 		this.y = y;

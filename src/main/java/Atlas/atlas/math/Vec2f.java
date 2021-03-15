@@ -10,6 +10,11 @@ public class Vec2f {
 		setY(0);
 	}
 	
+	public Vec2f(float v) {
+		setX(v);
+		setY(v);
+	}
+	
 	public Vec2f(float x, float y) {
 		setX(x);
 		setY(y);

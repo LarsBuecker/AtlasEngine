@@ -12,6 +12,12 @@ public class Vec3f {
 		setZ(0);
 	}
 	
+	public Vec3f(float v) {
+		setX(v);
+		setY(v);
+		setZ(v);
+	}
+	
 	public Vec3f(float x, float y, float z) {
 		setX(x);
 		setY(y);
