@@ -125,7 +125,7 @@ public class Window {
 		GLFW.glfwSwapInterval(1); // Vsync
 		
 		GLFWVidMode vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-		GLFW.glfwSetWindowPos(window, vidMode.width() / 2, vidMode.height() / 2);
+		GLFW.glfwSetWindowPos(window, vidMode.width() / 2 - this.width / 2, vidMode.height() / 2 - this.width / 4 );
 		GLFW.glfwShowWindow(window);	
 		
 		setLocalCallback();
