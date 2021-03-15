@@ -1,9 +1,8 @@
 package Atlas.atlas.renderer;
 
-import java.nio.ByteBuffer;
+import org.lwjgl.opengl.GL11;
 
-import org.lwjgl.BufferUtils;
-
+import Atlas.atlas.core.Log;
 import Atlas.atlas.math.Mat4f;
 import Atlas.atlas.math.Vec2f;
 import Atlas.atlas.math.Vec3f;
@@ -38,15 +37,19 @@ public class Renderer2D {
 		IndexBuffer squareIb = new IndexBuffer(squareIndices, squareIndices.length);
 		data.quadVertexArray.setIndexBuffer(squareIb);
 		
-		data.whiteTexture = new Texture2D(1, 1);
-		int whiteTexData = 0xFFFFFFFF;
-		ByteBuffer TexData = BufferUtils.createByteBuffer(8 * 4);
-		TexData.putInt(whiteTexData);
-		data.whiteTexture.setData(TexData, 0);
+//		data.whiteTexture = new Texture2D(1, 1);
+//		int whiteTexData = 0xFFFFFFFF;
+//		ByteBuffer TexData = BufferUtils.createByteBuffer(8 * 4);
+//		TexData.putInt(whiteTexData);
+//		Log.coreLog();
+//		data.whiteTexture.setData(TexData, 0);
+		data.whiteTexture = new Texture2D("res/default.png");
 		
 		data.textureShader = new Shader("res/shader/texture.glsl");
 		data.textureShader.bind();
 		data.textureShader.UploadUniformInt("u_Texture", 0);
+		
+		
 	}
 	
 	public static void shutdown() {
@@ -78,6 +81,7 @@ public class Renderer2D {
 		
 		data.quadVertexArray.bind();
 		RendererAPI.drawIndexed(data.quadVertexArray);
+		
 	}
 	
 	public static void drawQuad(Vec2f position, Vec2f size, Texture2D texture) {
@@ -94,5 +98,6 @@ public class Renderer2D {
 		
 		data.quadVertexArray.bind();
 		RendererAPI.drawIndexed(data.quadVertexArray);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 	}
 }

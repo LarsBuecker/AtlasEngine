@@ -22,6 +22,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL40;
 import org.lwjgl.opengl.GL45;
 
+import Atlas.atlas.core.Log;
 import de.matthiasmann.twl.utils.PNGDecoder;
 
 public class Texture2D {
@@ -64,6 +65,8 @@ public class Texture2D {
 		
 		width = decoder.getWidth();
 		height = decoder.getHeight();
+		
+		Log.coreLog("Texture " + path + " loaded!");
 	}
 	
 	public Texture2D(int width, int height) {
@@ -73,15 +76,19 @@ public class Texture2D {
 		
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);   
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		
+		Log.coreLog("Texture " + path + " loaded!");
 	}
 	
 	public void setData(ByteBuffer data, int size) {
 		// TODO Load texture with GL version below 4.5
-		GL45.glTextureSubImage2D(size, 0, 0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
+		GL45.glTextureSubImage2D(rendererId, 0, 0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
 	}
 	
 	public void bind(int slot) {
-		glBindTexture(slot, rendererId);
+		// TODO GL Version check for version under 4.5
+//		glBindTexture(slot, this.rendererId);
+		GL45.glBindTextureUnit(slot, this.rendererId);
 	}
 
 	public int getWidth() {
@@ -94,5 +101,9 @@ public class Texture2D {
 
 	public String getPath() {
 		return path;
+	}
+
+	public int getRendererId() {
+		return rendererId;
 	}	
 }
