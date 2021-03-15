@@ -19,10 +19,12 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL40;
 import org.lwjgl.opengl.GL45;
 
 import Atlas.atlas.core.Log;
+import Atlas.atlas.opengl.OpenGLContext;
 import de.matthiasmann.twl.utils.PNGDecoder;
 
 public class Texture2D {
@@ -56,10 +58,8 @@ public class Texture2D {
 		    // Generate Mip Map
 		    GL40.glGenerateMipmap(GL_TEXTURE_2D);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}   
 		
@@ -81,14 +81,19 @@ public class Texture2D {
 	}
 	
 	public void setData(ByteBuffer data, int size) {
-		// TODO Load texture with GL version below 4.5
-		GL45.glTextureSubImage2D(rendererId, 0, 0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
+		if(OpenGLContext.getGLCapabilities().OpenGL45)
+			GL45.glTextureSubImage2D(rendererId, 0, 0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data);
+		else 
+			System.err.println("Updating an existing texture requieres OpenGL version 4.5 or higher!");
 	}
 	
 	public void bind(int slot) {
-		// TODO GL Version check for version under 4.5
-//		glBindTexture(slot, this.rendererId);
-		GL45.glBindTextureUnit(slot, this.rendererId);
+		if(OpenGLContext.getGLCapabilities().OpenGL45)
+			GL45.glBindTextureUnit(slot, this.rendererId);
+		else {
+			GL15.glActiveTexture(GL15.GL_TEXTURE0 + slot);
+			GL15.glBindTexture(GL15.GL_TEXTURE_2D, rendererId);
+		}
 	}
 
 	public int getWidth() {

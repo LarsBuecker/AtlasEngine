@@ -145,7 +145,6 @@ public class Shader {
 			glDetachShader(rendererId, fragmentShader);
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	

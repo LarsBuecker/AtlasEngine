@@ -25,7 +25,6 @@ public class EditorLayer extends Layer {
 
 	public EditorLayer() {
 		super("Globe Editor");
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -37,19 +36,15 @@ public class EditorLayer extends Layer {
 
 	@Override
 	public void onDetach() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onUpdate(float delta) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onRender() {
-		// TODO Auto-generated method stub
 
 	}
 
