@@ -16,9 +16,13 @@ public class SubTexture2D {
 	}
 	
 	public static SubTexture2D createFromCoords(Texture2D texture, Vec2f coords, Vec2f spriteSize) {
+		return createFromCoords(texture, coords, spriteSize, new Vec2f(1, 1));
+	}
+	
+	public static SubTexture2D createFromCoords(Texture2D texture, Vec2f coords, Vec2f cellSize, Vec2f spriteSize) {
 		
-		Vec2f min = new Vec2f((coords.getX() * spriteSize.getX()) / texture.getWidth(), (coords.getY() * spriteSize.getY()) / texture.getHeight());
-		Vec2f max = new Vec2f(((coords.getX() + 1) * spriteSize.getX()) / texture.getWidth(), ((coords.getY() + 1) * spriteSize.getY()) / texture.getHeight());
+		Vec2f min = new Vec2f((coords.getX() * cellSize.getX()) / texture.getWidth(), (coords.getY() * cellSize.getY()) / texture.getHeight());
+		Vec2f max = new Vec2f(((coords.getX() + spriteSize.getX()) * cellSize.getX()) / texture.getWidth(), ((coords.getY() + spriteSize.getY()) * cellSize.getY()) / texture.getHeight());
 		
 		return new SubTexture2D(texture, min, max);
 	}
