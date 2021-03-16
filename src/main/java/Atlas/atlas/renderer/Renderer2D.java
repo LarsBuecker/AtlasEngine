@@ -106,9 +106,13 @@ public class Renderer2D {
 	
 	public static void drawQuad(Vec3f position, Vec2f size, Vec4f color) {
 		
-		data.vertQueue[data.vertIndex + 0] = position.getX();
-		data.vertQueue[data.vertIndex + 1] = position.getY();
-		data.vertQueue[data.vertIndex + 2] = position.getZ();
+		Mat4f transform = new Mat4f().Translation(position);
+		transform = transform.mul(new Mat4f().Scaling(new Vec3f(size.getX(), size.getY(), 0)));
+		transform = transform.transpose();
+		
+		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[0]).getX();
+		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[0]).getY();
+		data.vertQueue[data.vertIndex + 2] = transform.mul(data.quadVertexPositions[0]).getZ();
 		data.vertQueue[data.vertIndex + 3] = color.getX();
 		data.vertQueue[data.vertIndex + 4] = color.getY();
 		data.vertQueue[data.vertIndex + 5] = color.getZ();
@@ -119,9 +123,9 @@ public class Renderer2D {
 		data.vertQueue[data.vertIndex + 10] = 1;
 		data.vertIndex += data.quadVertexSize;
 		
-		data.vertQueue[data.vertIndex + 0] = position.getX() +  size.getX();
-		data.vertQueue[data.vertIndex + 1] = position.getY();
-		data.vertQueue[data.vertIndex + 2] = position.getZ();
+		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[1]).getX();
+		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[1]).getY();
+		data.vertQueue[data.vertIndex + 2] = transform.mul(data.quadVertexPositions[1]).getZ();
 		data.vertQueue[data.vertIndex + 3] = color.getX();
 		data.vertQueue[data.vertIndex + 4] = color.getY();
 		data.vertQueue[data.vertIndex + 5] = color.getZ();
@@ -132,9 +136,9 @@ public class Renderer2D {
 		data.vertQueue[data.vertIndex + 10] = 1;
 		data.vertIndex += data.quadVertexSize;
 		
-		data.vertQueue[data.vertIndex + 0] = position.getX() + size.getX();
-		data.vertQueue[data.vertIndex + 1] = position.getY() + size.getY();
-		data.vertQueue[data.vertIndex + 2] = position.getZ();
+		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[2]).getX();
+		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[2]).getY();
+		data.vertQueue[data.vertIndex + 2] = transform.mul(data.quadVertexPositions[2]).getZ();
 		data.vertQueue[data.vertIndex + 3] = color.getX();
 		data.vertQueue[data.vertIndex + 4] = color.getY();
 		data.vertQueue[data.vertIndex + 5] = color.getZ();
@@ -145,9 +149,9 @@ public class Renderer2D {
 		data.vertQueue[data.vertIndex + 10] = 1;
 		data.vertIndex += data.quadVertexSize;
 		
-		data.vertQueue[data.vertIndex + 0] = position.getX();
-		data.vertQueue[data.vertIndex + 1] = position.getY() + size.getY();
-		data.vertQueue[data.vertIndex + 2] = position.getZ();
+		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[3]).getX();
+		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[3]).getY();
+		data.vertQueue[data.vertIndex + 2] = transform.mul(data.quadVertexPositions[3]).getZ();
 		data.vertQueue[data.vertIndex + 3] = color.getX();
 		data.vertQueue[data.vertIndex + 4] = color.getY();
 		data.vertQueue[data.vertIndex + 5] = color.getZ();
@@ -183,9 +187,13 @@ public class Renderer2D {
 			data.textureSlotIndex++;
 		}
 		
-		data.vertQueue[data.vertIndex + 0] = position.getX();
-		data.vertQueue[data.vertIndex + 1] = position.getY();
-		data.vertQueue[data.vertIndex + 2] = position.getZ();
+		Mat4f transform = new Mat4f().Translation(position);
+		transform = transform.mul(new Mat4f().Scaling(new Vec3f(size.getX(), size.getY(), 0)));
+		transform = transform.transpose();
+		
+		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[0]).getX();
+		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[0]).getY();
+		data.vertQueue[data.vertIndex + 2] = transform.mul(data.quadVertexPositions[0]).getZ();
 		data.vertQueue[data.vertIndex + 3] = tintColor.getX();
 		data.vertQueue[data.vertIndex + 4] = tintColor.getY();
 		data.vertQueue[data.vertIndex + 5] = tintColor.getZ();
@@ -196,9 +204,9 @@ public class Renderer2D {
 		data.vertQueue[data.vertIndex + 10] = tiling;
 		data.vertIndex += data.quadVertexSize;
 		
-		data.vertQueue[data.vertIndex + 0] = position.getX() +  size.getX();
-		data.vertQueue[data.vertIndex + 1] = position.getY();
-		data.vertQueue[data.vertIndex + 2] = position.getZ();
+		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[1]).getX();
+		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[1]).getY();
+		data.vertQueue[data.vertIndex + 2] = transform.mul(data.quadVertexPositions[1]).getZ();
 		data.vertQueue[data.vertIndex + 3] = tintColor.getX();
 		data.vertQueue[data.vertIndex + 4] = tintColor.getY();
 		data.vertQueue[data.vertIndex + 5] = tintColor.getZ();
@@ -209,9 +217,9 @@ public class Renderer2D {
 		data.vertQueue[data.vertIndex + 10] = tiling;
 		data.vertIndex += data.quadVertexSize;
 		
-		data.vertQueue[data.vertIndex + 0] = position.getX() + size.getX();
-		data.vertQueue[data.vertIndex + 1] = position.getY() + size.getY();
-		data.vertQueue[data.vertIndex + 2] = position.getZ();
+		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[2]).getX();
+		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[2]).getY();
+		data.vertQueue[data.vertIndex + 2] = transform.mul(data.quadVertexPositions[2]).getZ();
 		data.vertQueue[data.vertIndex + 3] = tintColor.getX();
 		data.vertQueue[data.vertIndex + 4] = tintColor.getY();
 		data.vertQueue[data.vertIndex + 5] = tintColor.getZ();
@@ -222,9 +230,9 @@ public class Renderer2D {
 		data.vertQueue[data.vertIndex + 10] = tiling;
 		data.vertIndex += data.quadVertexSize;
 		
-		data.vertQueue[data.vertIndex + 0] = position.getX();
-		data.vertQueue[data.vertIndex + 1] = position.getY() + size.getY();
-		data.vertQueue[data.vertIndex + 2] = position.getZ();
+		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[3]).getX();
+		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[3]).getY();
+		data.vertQueue[data.vertIndex + 2] = transform.mul(data.quadVertexPositions[3]).getZ();
 		data.vertQueue[data.vertIndex + 3] = tintColor.getX();
 		data.vertQueue[data.vertIndex + 4] = tintColor.getY();
 		data.vertQueue[data.vertIndex + 5] = tintColor.getZ();
