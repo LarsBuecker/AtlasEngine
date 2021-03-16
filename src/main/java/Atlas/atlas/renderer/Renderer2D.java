@@ -13,6 +13,7 @@ import Atlas.atlas.opengl.Shader;
 import Atlas.atlas.opengl.VertexArray;
 import Atlas.atlas.opengl.VertexBuffer;
 import Atlas.atlas.renderer.BufferElement.ShaderDataType;
+import Atlas.atlas.renderer.Renderer2DStorage.Statistics;
 
 public class Renderer2D {
 
@@ -49,7 +50,7 @@ public class Renderer2D {
 		IndexBuffer squareIb = new IndexBuffer(quadIndices, quadIndices.length);
 		data.quadVertexArray.setIndexBuffer(squareIb);
 
-		data.whiteTexture = new Texture2D("res/default.png");
+		data.whiteTexture = new Texture2D("res/default.png"); // TODO: Texture Generation in Code
 		
 		int[] samplers = new int[data.maxTextureSlot];
 		for ( int i = 0; i < data.maxTextureSlot; i++) {
@@ -78,16 +79,12 @@ public class Renderer2D {
 		data.textureSlotIndex = 1;
 		data.vertIndex = 0;
 		data.vertCount = 0;
-		data.vertQueue = new float[data.maxVerts * data.quadVertexSize];
+		
 		data.textureShader.bind();
 		data.textureShader.UploadUniformMat4("u_ViewProjection", camera.getViewProjectionMatrix());
 	}
 	
 	public static void endScene() {
-		
-		for( int i = 0; i < data.textureSlotIndex; i++ ) {
-			data.textureSlots[i].bind(i);
-		}
 		
 		FloatBuffer buffer = storeDataInFloatBuffer(data.vertQueue);
 		data.quadVertexBuffer.setData(buffer);
@@ -95,7 +92,22 @@ public class Renderer2D {
 	}
 	
 	public static void flush() {
+		
+		for( int i = 0; i < data.textureSlotIndex; i++ ) {
+			data.textureSlots[i].bind(i);
+		}
+		
 		RendererAPI.drawIndexed(data.quadVertexArray, data.vertQueue.length * 4);
+		data.stats.drawCalls++;
+	}
+	
+	private static void flushAndReset() {
+		endScene();
+		
+		data.textureSlotIndex = 1;
+		data.vertIndex = 0;
+		data.vertCount = 0;
+		data.vertQueue = new float[data.maxVerts * data.quadVertexSize];
 	}
 	
 	// Prinmitives 
@@ -106,6 +118,10 @@ public class Renderer2D {
 	
 	public static void drawQuad(Vec3f position, Vec2f size, Vec4f color) {
 		
+		if ( data.vertIndex >= data.maxVerts * data.quadVertexSize) {
+			flushAndReset();
+		}
+		
 		Mat4f transform = new Mat4f().Translation(position);
 		transform = transform.mul(new Mat4f().Scaling(new Vec3f(size.getX(), size.getY(), 0)));
 		transform = transform.transpose();
@@ -163,6 +179,8 @@ public class Renderer2D {
 		data.vertIndex += data.quadVertexSize;
 		
 		data.vertCount += 6;
+		
+		data.stats.QuadCount++;
 		
 		data.whiteTexture.bind(0);
 	}
@@ -173,6 +191,10 @@ public class Renderer2D {
 	
 	public static void drawQuad(Vec3f position, Vec2f size, Texture2D texture, float tiling, Vec4f tintColor) {
 		
+		if ( data.vertIndex >= data.maxVerts * data.quadVertexSize) {
+			flushAndReset();
+		}
+		
 		float textureIndex = 0;
 		for ( int i = 1; i < data.textureSlotIndex; i++ ) {
 			if (data.textureSlots[i].equal(texture)) {
@@ -244,14 +266,19 @@ public class Renderer2D {
 		data.vertIndex += data.quadVertexSize;
 		
 		data.vertCount += 6;
+		
+		data.stats.QuadCount++;
 	}
-
 	
 	public static void drawRotatedQuad(Vec2f position, Vec2f size, float rotation, Vec4f color) {
 		drawRotatedQuad(new Vec3f( position.getX(), position.getY(), 0), size, rotation, color);
 	}
 	
 	public static void drawRotatedQuad(Vec3f position, Vec2f size, float rotation, Vec4f color) {
+		
+		if ( data.vertIndex >= data.maxVerts * data.quadVertexSize) {
+			flushAndReset();
+		}
 		
 		Mat4f transform = new Mat4f().Translation(position);
 		transform = transform.mul(new Mat4f().Rotation(new Vec3f(0, 0, rotation)));
@@ -311,6 +338,8 @@ public class Renderer2D {
 		data.vertIndex += data.quadVertexSize;
 		
 		data.vertCount += 6;
+		
+		data.stats.QuadCount++;
 		
 		data.whiteTexture.bind(0);
 	}
@@ -320,6 +349,11 @@ public class Renderer2D {
 	}
 	
 	public static void drawRotatedQuad(Vec3f position, Vec2f size, float rotation, Texture2D texture, Vec4f tintColor, float tiling) {
+		
+		if ( data.vertIndex >= data.maxVerts * data.quadVertexSize) {
+			flushAndReset();
+		}
+		
 		float textureIndex = 0;
 		for ( int i = 1; i < data.textureSlotIndex; i++ ) {
 			if (data.textureSlots[i].equal(texture)) {
@@ -392,6 +426,8 @@ public class Renderer2D {
 		data.vertIndex += data.quadVertexSize;
 		
 		data.vertCount += 6;
+		
+		data.stats.QuadCount++;
 	}
 	
 	private static FloatBuffer storeDataInFloatBuffer(float[] data) {
@@ -399,5 +435,14 @@ public class Renderer2D {
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
+	}
+
+	public static void resetStats() {
+		data.stats.drawCalls = 0;
+		data.stats.QuadCount = 0;
+	}
+	
+	public static Statistics getStats() {
+		return data.stats;
 	}
 }

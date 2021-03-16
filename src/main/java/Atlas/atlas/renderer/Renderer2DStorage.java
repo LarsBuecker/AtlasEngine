@@ -20,10 +20,20 @@ public class Renderer2DStorage {
 	
 	public int vertIndex = 0;
 	public int vertCount = 0;
-	public float[] vertQueue = new float[maxQuads * quadVertexSize];
+	public float[] vertQueue = new float[maxVerts * quadVertexSize];
 	
 	public Texture2D[] textureSlots = new Texture2D[maxTextureSlot];
 	public int textureSlotIndex = 1; // 0 = whiteTexture
 	
 	public Vec4f[] quadVertexPositions = new Vec4f[4];
+	
+	public class Statistics {
+		public int drawCalls = 0;
+		public int QuadCount = 0;
+		
+		public int getTotalVertexCount() { return QuadCount * 4; }
+		public int getTotalIndexCount() { return QuadCount * 6; }
+	}
+	
+	public Statistics stats = new Statistics();
 }
