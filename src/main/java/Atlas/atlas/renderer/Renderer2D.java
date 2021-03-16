@@ -3,7 +3,6 @@ package Atlas.atlas.renderer;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
 
 import Atlas.atlas.math.Mat4f;
 import Atlas.atlas.math.Vec2f;
@@ -64,6 +63,11 @@ public class Renderer2D {
 		// Set all TextureSlots to 0
 		
 		data.textureSlots[0] = data.whiteTexture;
+		
+		data.quadVertexPositions[0] = new Vec4f( -0.5f, -0.5f, 0.0f, 1.0f );
+		data.quadVertexPositions[1] = new Vec4f(  0.5f, -0.5f, 0.0f, 1.0f );
+		data.quadVertexPositions[2] = new Vec4f(  0.5f,  0.5f, 0.0f, 1.0f );
+		data.quadVertexPositions[3] = new Vec4f( -0.5f,  0.5f, 0.0f, 1.0f );
 	}
 	
 	public static void shutdown() {
@@ -232,8 +236,6 @@ public class Renderer2D {
 		data.vertIndex += data.quadVertexSize;
 		
 		data.vertCount += 6;
-		
-		data.textureShader.UploadUniformFloat("u_TilingFactor", tiling);
 	}
 
 	
@@ -242,36 +244,144 @@ public class Renderer2D {
 	}
 	
 	public static void drawRotatedQuad(Vec3f position, Vec2f size, float rotation, Vec4f color) {
-		data.textureShader.UploadUniformFloat4("u_Color", color);
-		data.textureShader.UploadUniformFloat("u_TilingFactor", 1f);
+		
+		Mat4f transform = new Mat4f().Translation(position);
+		transform = transform.mul(new Mat4f().Rotation(new Vec3f(0, 0, rotation)));
+		transform = transform.mul(new Mat4f().Scaling(new Vec3f(size.getX(), size.getY(), 0)));
+		
+		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[0]).getX();
+		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[0]).getY();
+		data.vertQueue[data.vertIndex + 2] = transform.mul(data.quadVertexPositions[0]).getZ();
+		data.vertQueue[data.vertIndex + 3] = color.getX();
+		data.vertQueue[data.vertIndex + 4] = color.getY();
+		data.vertQueue[data.vertIndex + 5] = color.getZ();
+		data.vertQueue[data.vertIndex + 6] = color.getW();
+		data.vertQueue[data.vertIndex + 7] = 0;
+		data.vertQueue[data.vertIndex + 8] = 0;
+		data.vertQueue[data.vertIndex + 9] = 0;
+		data.vertQueue[data.vertIndex + 10] = 1;
+		data.vertIndex += data.quadVertexSize;
+		
+		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[1]).getX();
+		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[1]).getY();
+		data.vertQueue[data.vertIndex + 2] = transform.mul(data.quadVertexPositions[1]).getZ();
+		data.vertQueue[data.vertIndex + 3] = color.getX();
+		data.vertQueue[data.vertIndex + 4] = color.getY();
+		data.vertQueue[data.vertIndex + 5] = color.getZ();
+		data.vertQueue[data.vertIndex + 6] = color.getW();
+		data.vertQueue[data.vertIndex + 7] = 1;
+		data.vertQueue[data.vertIndex + 8] = 0;
+		data.vertQueue[data.vertIndex + 9] = 0;
+		data.vertQueue[data.vertIndex + 10] = 1;
+		data.vertIndex += data.quadVertexSize;
+		
+		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[2]).getX();
+		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[2]).getY();
+		data.vertQueue[data.vertIndex + 2] = transform.mul(data.quadVertexPositions[2]).getZ();
+		data.vertQueue[data.vertIndex + 3] = color.getX();
+		data.vertQueue[data.vertIndex + 4] = color.getY();
+		data.vertQueue[data.vertIndex + 5] = color.getZ();
+		data.vertQueue[data.vertIndex + 6] = color.getW();
+		data.vertQueue[data.vertIndex + 7] = 1;
+		data.vertQueue[data.vertIndex + 8] = 1;
+		data.vertQueue[data.vertIndex + 9] = 0;
+		data.vertQueue[data.vertIndex + 10] = 1;
+		data.vertIndex += data.quadVertexSize;
+		
+		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[3]).getX();
+		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[3]).getY();
+		data.vertQueue[data.vertIndex + 2] = transform.mul(data.quadVertexPositions[3]).getZ();
+		data.vertQueue[data.vertIndex + 3] = color.getX();
+		data.vertQueue[data.vertIndex + 4] = color.getY();
+		data.vertQueue[data.vertIndex + 5] = color.getZ();
+		data.vertQueue[data.vertIndex + 6] = color.getW();
+		data.vertQueue[data.vertIndex + 7] = 0;
+		data.vertQueue[data.vertIndex + 8] = 1;
+		data.vertQueue[data.vertIndex + 9] = 0;
+		data.vertQueue[data.vertIndex + 10] = 1;
+		data.vertIndex += data.quadVertexSize;
+		
+		data.vertCount += 6;
+		
 		data.whiteTexture.bind(0);
+	}
+	
+	public static void drawRotatedQuad(Vec2f position, Vec2f size, float rotation, Texture2D texture, Vec4f tintColor, float tiling) {
+		drawRotatedQuad(new Vec3f(position.getX(), position.getY(), 0), size, rotation, texture, tintColor, tiling);
+	}
+	
+	public static void drawRotatedQuad(Vec3f position, Vec2f size, float rotation, Texture2D texture, Vec4f tintColor, float tiling) {
+		float textureIndex = 0;
+		for ( int i = 1; i < data.textureSlotIndex; i++ ) {
+			if (data.textureSlots[i].equal(texture)) {
+				textureIndex = (float) i;
+				break;
+			}
+		}
+		
+		if(textureIndex == 0) {
+			textureIndex = (float) data.textureSlotIndex;
+			data.textureSlots[data.textureSlotIndex] = texture;
+			data.textureSlotIndex++;
+		}
 		
 		Mat4f transform = new Mat4f().Translation(position);
 		transform = transform.mul(new Mat4f().Rotation(new Vec3f(0, 0, rotation)));
 		transform = transform.mul(new Mat4f().Scaling(new Vec3f(size.getX(), size.getY(), 0)));
-		data.textureShader.UploadUniformMat4("u_Transform", transform);
 		
-		data.quadVertexArray.bind();
-		RendererAPI.drawIndexed(data.quadVertexArray);
-	}
-	
-	public static void drawRotatedQuad(Vec2f position, Vec2f size, float rotation, Texture2D texture, float tiling) {
-		drawRotatedQuad(new Vec3f(position.getX(), position.getY(), 0), size, rotation, texture, tiling);
-	}
-	
-	public static void drawRotatedQuad(Vec3f position, Vec2f size, float rotation, Texture2D texture, float tiling) {
-		data.textureShader.UploadUniformFloat4("u_Color", new Vec4f(1, 1, 1, 1));
-		data.textureShader.UploadUniformFloat("u_TilingFactor", tiling);
-		texture.bind(0);
+		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[0]).getX();
+		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[0]).getY();
+		data.vertQueue[data.vertIndex + 2] = transform.mul(data.quadVertexPositions[0]).getZ();
+		data.vertQueue[data.vertIndex + 3] = tintColor.getX();
+		data.vertQueue[data.vertIndex + 4] = tintColor.getY();
+		data.vertQueue[data.vertIndex + 5] = tintColor.getZ();
+		data.vertQueue[data.vertIndex + 6] = tintColor.getW();
+		data.vertQueue[data.vertIndex + 7] = 0;
+		data.vertQueue[data.vertIndex + 8] = 0;
+		data.vertQueue[data.vertIndex + 9] = textureIndex;
+		data.vertQueue[data.vertIndex + 10] = tiling;
+		data.vertIndex += data.quadVertexSize;
 		
-		Mat4f transform = new Mat4f().Translation(position);
-		transform = transform.mul(new Mat4f().Rotation(new Vec3f(0, 0, rotation)));
-		transform = transform.mul(new Mat4f().Scaling(new Vec3f(size.getX(), size.getY(), 0)));
-		data.textureShader.UploadUniformMat4("u_Transform", transform);
+		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[1]).getX();
+		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[1]).getY();
+		data.vertQueue[data.vertIndex + 2] = transform.mul(data.quadVertexPositions[1]).getZ();
+		data.vertQueue[data.vertIndex + 3] = tintColor.getX();
+		data.vertQueue[data.vertIndex + 4] = tintColor.getY();
+		data.vertQueue[data.vertIndex + 5] = tintColor.getZ();
+		data.vertQueue[data.vertIndex + 6] = tintColor.getW();
+		data.vertQueue[data.vertIndex + 7] = 1;
+		data.vertQueue[data.vertIndex + 8] = 0;
+		data.vertQueue[data.vertIndex + 9] = textureIndex;
+		data.vertQueue[data.vertIndex + 10] = tiling;
+		data.vertIndex += data.quadVertexSize;
 		
-		data.quadVertexArray.bind();
-		RendererAPI.drawIndexed(data.quadVertexArray);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[2]).getX();
+		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[2]).getY();
+		data.vertQueue[data.vertIndex + 2] = transform.mul(data.quadVertexPositions[2]).getZ();
+		data.vertQueue[data.vertIndex + 3] = tintColor.getX();
+		data.vertQueue[data.vertIndex + 4] = tintColor.getY();
+		data.vertQueue[data.vertIndex + 5] = tintColor.getZ();
+		data.vertQueue[data.vertIndex + 6] = tintColor.getW();
+		data.vertQueue[data.vertIndex + 7] = 1;
+		data.vertQueue[data.vertIndex + 8] = 1;
+		data.vertQueue[data.vertIndex + 9] = textureIndex;
+		data.vertQueue[data.vertIndex + 10] = tiling;
+		data.vertIndex += data.quadVertexSize;
+		
+		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[3]).getX();
+		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[3]).getY();
+		data.vertQueue[data.vertIndex + 2] = transform.mul(data.quadVertexPositions[3]).getZ();
+		data.vertQueue[data.vertIndex + 3] = tintColor.getX();
+		data.vertQueue[data.vertIndex + 4] = tintColor.getY();
+		data.vertQueue[data.vertIndex + 5] = tintColor.getZ();
+		data.vertQueue[data.vertIndex + 6] = tintColor.getW();
+		data.vertQueue[data.vertIndex + 7] = 0;
+		data.vertQueue[data.vertIndex + 8] = 1;
+		data.vertQueue[data.vertIndex + 9] = textureIndex;
+		data.vertQueue[data.vertIndex + 10] = tiling;
+		data.vertIndex += data.quadVertexSize;
+		
+		data.vertCount += 6;
 	}
 	
 	private static FloatBuffer storeDataInFloatBuffer(float[] data) {

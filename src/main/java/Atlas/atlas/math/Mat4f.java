@@ -208,45 +208,7 @@ public class Mat4f {
 		m[3][0] = 0; 				m[3][1] = 0; 				m[3][2] = 0; 				m[3][3] = 1;
 	
 		return this;
-	}
-	
-//	public Mat4f OrthographicProjection(float l, float r, float b, float t, float n, float f){
-//		
-//		m[0][0] = 2.0f/(r-l); 	m[0][1] = 0; 			m[0][2] = 0; 			m[0][3] = -(r+l)/(r-l);
-//		m[1][0] = 0;			m[1][1] = 2.0f/(t-b); 	m[1][2] = 0; 			m[1][3] = -(t+b)/(t-b);
-//		m[2][0] = 0; 			m[2][1] = 0; 			m[2][2] = 2.0f/(f-n); 	m[2][3] = -(f+n)/(f-n);
-//		m[3][0] = 0; 			m[3][1] = 0; 			m[3][2] = 0; 			m[3][3] = 1;
-//	
-//		return this;
-//	}
-//	
-//	public Mat4f PerspectiveProjection(float fovY, float width, float height, float zNear, float zFar)
-//	{
-//		float tanFOV = (float) Math.tan(Math.toRadians(fovY/2));
-//		float aspectRatio = width/height;
-//		
-//		m[0][0] = 1/(tanFOV*aspectRatio); m[0][1] = 0; 		 	   m[0][2] = 0; 				m[0][3] = 0;
-//		m[1][0] = 0; 					  m[1][1] = 1/tanFOV; 	   m[1][2] = 0; 			 	m[1][3] = 0;
-//		m[2][0] = 0; 				 	  m[2][1] = 0; 		 	   m[2][2] = zFar/(zFar-zNear);	m[2][3] = zFar*zNear /(zFar-zNear);
-//		m[3][0] = 0; 				 	  m[3][1] = 0; 		 	   m[3][2] = 1; 				m[3][3] = 1;
-//	
-//		return this;
-//	}
-//	
-//	public Mat4f View(Vec3f forward, Vec3f up)
-//	{
-//		Vec3f f = forward;
-//		Vec3f u = up;
-//		Vec3f r = u.cross(f);
-//		
-//		m[0][0] = r.getX(); m[0][1] = r.getY(); m[0][2] = r.getZ(); m[0][3] = 0;
-//		m[1][0] = u.getX(); m[1][1] = u.getY(); m[1][2] = u.getZ(); m[1][3] = 0;
-//		m[2][0] = f.getX();	m[2][1] = f.getY(); m[2][2] = f.getZ(); m[2][3] = 0;
-//		m[3][0] = 0; 		m[3][1] = 0; 		m[3][2] = 0; 		m[3][3] = 1;
-//	
-//		return this;
-//	}
-	
+	}	
 	
 	public Mat4f mul(Mat4f r){
 		
@@ -266,17 +228,16 @@ public class Mat4f {
 		return res;
 	}
 	
-//	public Quaternion mul(Quaternion v)
-//	{
-//		Quaternion res = new Quaternion(0,0,0,0);
-//		
-//		res.setX(m[0][0] * v.getX() + m[0][1] * v.getY() + m[0][2] * v.getZ() + m[0][3] * v.getW());
-//		res.setY(m[1][0] * v.getX() + m[1][1] * v.getY() + m[1][2] * v.getZ() + m[1][3] * v.getW());
-//		res.setZ(m[2][0] * v.getX() + m[2][1] * v.getY() + m[2][2] * v.getZ() + m[2][3] * v.getW());
-//		res.setW(m[3][0] * v.getX() + m[3][1] * v.getY() + m[3][2] * v.getZ() + m[3][3] * v.getW());
-//		
-//		return res;
-//	}
+	public Vec4f mul(Vec4f p) {
+		Vec4f result = new Vec4f();
+		
+		result.setX(m[0][0] * p.getX() + m[1][0] * p.getY() + m[2][0] * p.getZ() + m[3][0] * p.getW());
+		result.setY(m[0][1] * p.getX() + m[1][1] * p.getY() + m[2][1] * p.getZ() + m[3][1] * p.getW());
+		result.setZ(m[0][2] * p.getX() + m[1][2] * p.getY() + m[2][2] * p.getZ() + m[3][2] * p.getW());
+		result.setW(m[0][3] * p.getX() + m[1][3] * p.getY() + m[2][3] * p.getZ() + m[3][3] * p.getW());
+		
+		return result;
+	}
 	
 	public Mat4f transpose()
 	{

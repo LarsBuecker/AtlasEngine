@@ -1,5 +1,6 @@
 package Atlas.atlas.renderer;
 
+import Atlas.atlas.math.Vec4f;
 import Atlas.atlas.opengl.Shader;
 import Atlas.atlas.opengl.VertexArray;
 import Atlas.atlas.opengl.VertexBuffer;
@@ -23,4 +24,6 @@ public class Renderer2DStorage {
 	
 	public Texture2D[] textureSlots = new Texture2D[maxTextureSlot];
 	public int textureSlotIndex = 1; // 0 = whiteTexture
+	
+	public Vec4f[] quadVertexPositions = new Vec4f[4];
 }

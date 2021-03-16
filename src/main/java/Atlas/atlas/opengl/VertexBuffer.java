@@ -11,7 +11,6 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL45;
 
 import Atlas.atlas.renderer.BufferLayout;
 
@@ -34,12 +33,8 @@ public class VertexBuffer {
 	}
 	
 	public void setData(FloatBuffer buffer) {
-		if(OpenGLContext.getGLCapabilities().OpenGL45) {
-			GL45.glBufferSubData(rendererId, 0, buffer);
-		} else {
 			bind();
 			GL30.glBufferData(GL_ARRAY_BUFFER, buffer, GL15.GL_DYNAMIC_DRAW);
-		}
 	}
 	
 	public void bind() {
