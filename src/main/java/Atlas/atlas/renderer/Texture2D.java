@@ -58,7 +58,8 @@ public class Texture2D {
 		    // Generate Mip Map
 		    GL40.glGenerateMipmap(GL_TEXTURE_2D);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		    Log.coreLog("Texture not found: " + path);
+		    e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}   
