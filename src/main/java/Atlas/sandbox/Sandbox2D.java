@@ -46,7 +46,7 @@ public class Sandbox2D extends Layer {
 		RendererAPI.clear();
 		
 		Renderer2D.beginScene(cameraController.getCamera());
-		Renderer2D.drawQuad(new Vec2f(-1.5f, 0), new Vec2f(2, 1f), new Vec4f(0.8f, 0.2f, 0.1f, 1.0f));
+//		Renderer2D.drawQuad(new Vec2f(-1.5f, 0), new Vec2f(2, 1f), new Vec4f(0.8f, 0.2f, 0.1f, 1.0f));
 		
 		for( int i = 0; i < 50; i++ ) {
 			for ( int j = 0; j < 50	; j++ ) {
@@ -55,7 +55,7 @@ public class Sandbox2D extends Layer {
 		}
 		
 		Renderer2D.drawQuad(new Vec3f(0, 0, 0.1f), new Vec2f(10f, 10f), texture, 10, new Vec4f(1, 1, 1, 1));
-		Renderer2D.drawRotatedQuad(new Vec2f(-2, -1), new Vec2f(1, 1), 45, new Vec4f(0.1f, 0.7f, 0.3f, 1.0f));
+		Renderer2D.drawRotatedQuad(new Vec2f(0.5f, 1f), new Vec2f(1, 2), 0, new Vec4f(0.1f, 0.7f, 0.3f, 1.0f));
 		
 		Renderer2D.endScene();
 	}

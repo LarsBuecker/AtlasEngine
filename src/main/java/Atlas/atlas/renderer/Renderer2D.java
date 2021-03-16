@@ -248,6 +248,7 @@ public class Renderer2D {
 		Mat4f transform = new Mat4f().Translation(position);
 		transform = transform.mul(new Mat4f().Rotation(new Vec3f(0, 0, rotation)));
 		transform = transform.mul(new Mat4f().Scaling(new Vec3f(size.getX(), size.getY(), 0)));
+		transform = transform.transpose();
 		
 		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[0]).getX();
 		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[0]).getY();
@@ -328,6 +329,7 @@ public class Renderer2D {
 		Mat4f transform = new Mat4f().Translation(position);
 		transform = transform.mul(new Mat4f().Rotation(new Vec3f(0, 0, rotation)));
 		transform = transform.mul(new Mat4f().Scaling(new Vec3f(size.getX(), size.getY(), 0)));
+		transform = transform.transpose();
 		
 		data.vertQueue[data.vertIndex + 0] = transform.mul(data.quadVertexPositions[0]).getX();
 		data.vertQueue[data.vertIndex + 1] = transform.mul(data.quadVertexPositions[0]).getY();
