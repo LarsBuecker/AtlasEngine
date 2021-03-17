@@ -22,7 +22,7 @@ public class EditorLayer extends Layer {
 	private static boolean dockspsaceOpen = true;
 	private static boolean opt_fullscreen = true;
 	
-
+	
 	public EditorLayer() {
 		super("Globe Editor");
 	}
@@ -31,7 +31,6 @@ public class EditorLayer extends Layer {
 	public void OnAttach() {
 		Window window = Application.getInstance().getWindow();
 		window.setTitle("Atlas | " + getName());
-
 	}
 
 	@Override
@@ -45,7 +44,7 @@ public class EditorLayer extends Layer {
 
 	@Override
 	public void onRender() {
-
+		
 	}
 
 	@Override

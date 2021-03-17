@@ -1,7 +1,13 @@
 package Atlas.atlas.renderer;
 
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glEnable;
+
 import org.lwjgl.opengl.GL11;
-import static org.lwjgl.opengl.GL11.*;
 
 import Atlas.atlas.math.Vec4f;
 import Atlas.atlas.opengl.VertexArray;

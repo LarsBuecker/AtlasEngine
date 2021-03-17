@@ -6,6 +6,8 @@ import Atlas.atlas.events.Event;
 import Atlas.atlas.math.Vec2f;
 import Atlas.atlas.math.Vec3f;
 import Atlas.atlas.math.Vec4f;
+import Atlas.atlas.renderer.Framebuffer;
+import Atlas.atlas.renderer.FramebufferSpecification;
 import Atlas.atlas.renderer.OrthographicCameraController;
 import Atlas.atlas.renderer.Renderer2D;
 import Atlas.atlas.renderer.Renderer2DStorage.Statistics;
@@ -23,11 +25,18 @@ public class Sandbox2D extends Layer {
 	
 	private float[] squareCol = { 1f, 1f, 1f, 1f };
 	private Texture2D texture;
+	
+	private Framebuffer framebuffer;
 
 	@Override
 	public void OnAttach() {
 		cameraController = new OrthographicCameraController(16f / 9f);
 		texture = new Texture2D("res/checkerboard.png");
+		
+		FramebufferSpecification fbSpec = new FramebufferSpecification();
+		fbSpec.width = 1280;
+		fbSpec.height = 720;
+		framebuffer = new Framebuffer(fbSpec);
 	}
 
 	@Override
@@ -43,11 +52,15 @@ public class Sandbox2D extends Layer {
 
 	@Override
 	public void onRender() {
+		
+		framebuffer.bind();
 		Renderer2D.resetStats();
 		RendererAPI.setClearColor(new Vec4f( 0.1f, 0.1f, 0.1f, 1));
 		RendererAPI.clear();
 		
 		Renderer2D.beginScene(cameraController.getCamera());
+		
+		
 		Renderer2D.drawQuad(new Vec2f(-1.5f, 0), new Vec2f(2, 1f), new Vec4f(0.8f, 0.2f, 0.1f, 1.0f));
 		Renderer2D.drawQuad(new Vec3f(0, 0, 0.1f), new Vec2f(20f, 20f), texture, 10, new Vec4f(squareCol[0], squareCol[1], squareCol[2], squareCol[3]));
 		Renderer2D.drawRotatedQuad(new Vec2f(0f, 1f), new Vec2f(1, 2), 0, new Vec4f(0.1f, 0.7f, 0.3f, 1.0f));
@@ -61,6 +74,8 @@ public class Sandbox2D extends Layer {
 			}
 		}
 		Renderer2D.endScene();	
+		framebuffer.unbind();
+		RendererAPI.clear();
 	}
 
 	@Override
@@ -77,6 +92,9 @@ public class Sandbox2D extends Layer {
 		ImGui.text("Indices: " + stats.getTotalIndexCount());
 		
 		ImGui.colorEdit3("Square Color", squareCol);
+		
+		int textureID = framebuffer.getColorAttachmentRendererId();
+		ImGui.image(textureID, 512, 512);
 		ImGui.end();
 		
 		

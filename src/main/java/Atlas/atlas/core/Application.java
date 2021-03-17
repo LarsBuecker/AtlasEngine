@@ -87,7 +87,6 @@ public class Application implements EventListener {
 			}
 			imGuiLayer.end();
 			
-			
 			window.swapBuffers();
 		}
 		window.dispose();

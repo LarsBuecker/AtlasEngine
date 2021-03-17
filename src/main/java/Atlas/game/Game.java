@@ -37,7 +37,7 @@ public class Game extends Layer {
 	
 	private OrthographicCameraController cameraController;
 	private Texture2D spriteSheet;
-	private SubTexture2D textureStairs, textureTree;
+	private SubTexture2D textureStairs;
 	private SubTexture2D textureDirt, textureWater;
 	private HashMap<String, SubTexture2D> textureMap;
 
@@ -51,7 +51,6 @@ public class Game extends Layer {
 		cameraController.setZoomLevel(8f);
 		spriteSheet = new Texture2D("res/game/RPGpack_sheet_2X.png");
 		textureStairs = SubTexture2D.createFromCoords(spriteSheet, new Vec2f(0, 9), new Vec2f(128, 128));
-		textureTree = SubTexture2D.createFromCoords(spriteSheet, new Vec2f(0,10), new Vec2f(128, 128), new Vec2f(1, 2));
 		
 		textureDirt = SubTexture2D.createFromCoords(spriteSheet, new Vec2f(6, 1), new Vec2f(128, 128));
 		textureWater = SubTexture2D.createFromCoords(spriteSheet, new Vec2f(11, 1), new Vec2f(128, 128));
