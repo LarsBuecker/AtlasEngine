@@ -30,7 +30,6 @@ public class ImGuiLayer extends Layer {
 	@Override
 	public void OnAttach() {
 		Log.coreLog(getName() + " Attached!");
-		
 		ImGui.createContext();
 		ImGuiIO io = ImGui.getIO();
 		io.addConfigFlags(ImGuiConfigFlags.NavEnableKeyboard);

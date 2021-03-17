@@ -39,7 +39,7 @@ public class EditorLayer extends Layer {
 	
 	private Framebuffer framebuffer;
 	private Vec2f viewportSize = new Vec2f();
-	private boolean viewportFocused = false;
+	private boolean viewportFocused = false, viewportHovered = false;
 	
 	public EditorLayer() {
 		super("Globe Editor");
@@ -159,7 +159,8 @@ public class EditorLayer extends Layer {
 		ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
 		ImGui.begin("Viewport");
 		viewportFocused = ImGui.isWindowFocused();
-		Application.getInstance().getImGuiLayer().setBlockEvent(!viewportFocused);
+		viewportHovered = ImGui.isWindowHovered();
+		Application.getInstance().getImGuiLayer().setBlockEvent(!viewportFocused || !viewportHovered);
 		ImVec2 viewportPanelsize = ImGui.getContentRegionAvail();
 		if( viewportPanelsize.x != viewportSize.getX() || viewportPanelsize.y != viewportSize.getY()) {
 			framebuffer.resize((int) viewportPanelsize.x, (int) viewportPanelsize.y);
