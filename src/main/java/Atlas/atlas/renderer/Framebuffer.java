@@ -13,9 +13,9 @@ import org.lwjgl.opengl.GL45;
 public class Framebuffer {
 	
 	private FramebufferSpecification spec;
-	private int rendererId;
-	private int colorAttachment;
-	private int depthAttachment;
+	private int rendererId = 0;
+	private int colorAttachment = 0;
+	private int depthAttachment = 0;
 	
 	public Framebuffer(FramebufferSpecification spec) {
 		this.spec = spec;
@@ -29,20 +29,33 @@ public class Framebuffer {
 	
 	public void bind() {
 		GL45.glBindFramebuffer(GL_FRAMEBUFFER, rendererId);
+		GL11.glViewport(0, 0, spec.width, spec.height);
 	}
 	
 	public void unbind() {
 		GL45.glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 	
+	public void resize(int width, int height) {
+		spec.width = width;
+		spec.height = height;
+		Invalidate();
+	}
+	
 	public void Invalidate() {
+		
+		if (rendererId != 0) {
+			GL45.glDeleteFramebuffers(rendererId);
+			GL45.glDeleteTextures(colorAttachment);
+			GL45.glDeleteTextures(depthAttachment);
+		}
 		
 		rendererId = GL45.glGenFramebuffers();
 		GL45.glBindFramebuffer(GL_FRAMEBUFFER, rendererId);
 		
 		colorAttachment = GL45.glGenTextures();
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, colorAttachment);
-		GL45.glTexImage2D(GL_TEXTURE_2D, 0, GL45.GL_RGBA8, spec.width, spec.width, 0, GL45.GL_RGBA, GL45.GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
+		GL45.glTexImage2D(GL_TEXTURE_2D, 0, GL45.GL_RGBA8, spec.width, spec.height, 0, GL45.GL_RGBA, GL45.GL_UNSIGNED_BYTE, (java.nio.ByteBuffer) null);
 		GL15.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		GL15.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		

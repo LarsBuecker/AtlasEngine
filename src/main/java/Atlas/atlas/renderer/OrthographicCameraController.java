@@ -63,6 +63,11 @@ public class OrthographicCameraController {
 		camera.setPosition(cameraPosition);
 	}
 	
+	public void onResize(float width, float height) {
+		aspectRatio = width / height;
+		calculateView();
+	}
+	
 	public void onEvent(Event e) {
 		EventDispatcher dispatcher = new EventDispatcher(e);
 		dispatcher.dispatch(EventType.MouseScrolled, (Event event) -> (onMouseScrolled((MouseScrolledEvent) event)));

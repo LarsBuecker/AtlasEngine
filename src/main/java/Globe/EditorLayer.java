@@ -17,10 +17,12 @@ import Atlas.atlas.renderer.OrthographicCameraController;
 import Atlas.atlas.renderer.Renderer2D;
 import Atlas.atlas.renderer.RendererAPI;
 import Atlas.atlas.renderer.Texture2D;
+import Atlas.atlas.renderer.Renderer2DStorage.Statistics;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.ImGuiStyle;
 import imgui.ImGuiViewport;
+import imgui.ImVec2;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
@@ -36,6 +38,7 @@ public class EditorLayer extends Layer {
 	private Texture2D texture;
 	
 	private Framebuffer framebuffer;
+	private Vec2f viewportSize = new Vec2f();
 	
 	
 	public EditorLayer() {
@@ -140,6 +143,32 @@ public class EditorLayer extends Layer {
 			}
 			ImGui.endMenuBar();
 		}
+		
+		Statistics stats = Renderer2D.getStats();
+		ImGui.begin("Statistics");		
+		ImGui.text("Renderer2D Stats:");
+		ImGui.text("FPS: " + Application.getInstance().getFPS());
+		ImGui.text("Draw Calls: " + stats.drawCalls);
+		ImGui.text("Quad Count: " + stats.QuadCount);
+		ImGui.text("Vertices: " + stats.getTotalVertexCount());
+		ImGui.text("Indices: " + stats.getTotalIndexCount());
+		
+		ImGui.colorEdit3("Square Color", squareCol);
+		ImGui.end();
+		
+		ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
+		ImGui.begin("Viewport");
+		ImVec2 viewportPanelsize = ImGui.getContentRegionAvail();
+		if( viewportPanelsize.x != viewportSize.getX() || viewportPanelsize.y != viewportSize.getY()) {
+			framebuffer.resize((int) viewportPanelsize.x, (int) viewportPanelsize.y);
+			viewportSize = new Vec2f(viewportPanelsize.x, viewportPanelsize.y);
+			
+			cameraController.onResize(viewportSize.getX(), viewportSize.getY());
+		}
+		
+		ImGui.image(framebuffer.getColorAttachmentRendererId(), viewportPanelsize.x, viewportPanelsize.y, 0, 1, 1, 0);
+		ImGui.end();
+		ImGui.popStyleVar();
 		
 		ImGui.end();
 	}
