@@ -12,6 +12,7 @@ public class MouseButtonEvent extends Event {
 		this.button = button;
 		this.x = x;
 		this.y = y;
+		category = EventCategory.EventCategoryMouse;
 	}
 
 	public int getButton() {

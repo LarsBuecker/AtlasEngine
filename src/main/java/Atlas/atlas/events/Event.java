@@ -10,8 +10,14 @@ public class Event {
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	}
 	
+	public enum EventCategory {
+		EventCategoryMouse,
+		EventCategoryKeyboard,
+	}
+	
 	private EventType type;
-	boolean handled;
+	protected EventCategory category;
+	public boolean handled;
 	
 	protected Event(EventType type) {
 		this.type = type;
@@ -19,5 +25,9 @@ public class Event {
 	
 	public EventType getType() {
 		return type;
+	}
+	
+	public EventCategory getCategory() {
+		return category;
 	}
 }

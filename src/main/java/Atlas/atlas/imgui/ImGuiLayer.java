@@ -7,6 +7,7 @@ import Atlas.atlas.core.Layer;
 import Atlas.atlas.core.Log;
 import Atlas.atlas.core.Window;
 import Atlas.atlas.events.Event;
+import Atlas.atlas.events.Event.EventCategory;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.ImGuiStyle;
@@ -19,6 +20,8 @@ public class ImGuiLayer extends Layer {
 	
 	 private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
 	 private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
+	 
+	 private boolean blockEvents = true;
 
 	public ImGuiLayer() {
 		super("ImGuiLayer");
@@ -65,7 +68,6 @@ public class ImGuiLayer extends Layer {
 		ImGuiIO io = ImGui.getIO();
 		Window window = Application.getInstance().getWindow();
 		io.getDisplaySize(new ImVec2((float) window.getWidth(), (float) window.getHeight()));
-		
 		// Rendering 
 		ImGui.render();
 		imGuiGl3.renderDrawData(ImGui.getDrawData());
@@ -95,7 +97,19 @@ public class ImGuiLayer extends Layer {
 
 	@Override
 	public void onEvent(Event event) {
-		
+		if (blockEvents) {
+			ImGuiIO io = ImGui.getIO();
+			if ( event.getCategory() == EventCategory.EventCategoryMouse && io.getWantCaptureMouse() ) {
+				event.handled = true;
+			} 
+			if ( event.getCategory() == EventCategory.EventCategoryKeyboard && io.getWantCaptureKeyboard() ) {
+				event.handled = true;
+			}
+		}
+	}
+	
+	public void setBlockEvent(boolean blockEvents) {
+		this.blockEvents = blockEvents;
 	}
 
 }

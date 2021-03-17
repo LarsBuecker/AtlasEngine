@@ -9,5 +9,6 @@ public class KeyEvent extends Event {
 	protected KeyEvent(int keycode, EventType type) {
 		super(type);
 		this.keycode = keycode;
+		category = EventCategory.EventCategoryKeyboard;
 	}
 }

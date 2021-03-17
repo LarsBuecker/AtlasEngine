@@ -13,7 +13,6 @@ public class SandboxApp {
 		Sandbox2D sandboxLayer= new Sandbox2D();
 		app.pushLayer(sandboxLayer);
 		
-		app.init();	
 		app.run();
 		
 	}

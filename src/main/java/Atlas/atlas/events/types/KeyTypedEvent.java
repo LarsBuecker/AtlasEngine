@@ -6,6 +6,7 @@ public class KeyTypedEvent extends KeyEvent {
 
 	public KeyTypedEvent(int keycode) {
 		super(keycode, Event.EventType.KeyTyped);
+		category = EventCategory.EventCategoryKeyboard;
 	}
 
 }

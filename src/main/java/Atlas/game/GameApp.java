@@ -9,7 +9,6 @@ public class GameApp {
 		
 		Game game = new Game();
 		app.pushLayer(game);
-		app.init();
 		app.run();
 	}
 

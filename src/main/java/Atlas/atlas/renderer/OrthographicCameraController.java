@@ -48,8 +48,6 @@ public class OrthographicCameraController {
 			cameraPosition = cameraPosition.add(new Vec3f(0, delta * cameraTranslationSpeed, 0));
 		}
 		
-//		Log.clientLog(cameraPosition.toString());
-		
 		if(rotation) {
 			if( Input.isKeyPressed(KeyCodes.AL_KEY_Q) ) {
 				cameraRotation += cameraRotationSpeed * delta;
@@ -78,13 +76,13 @@ public class OrthographicCameraController {
 		zoomLevel -= e.yOffset;
 		if ( zoomLevel < 0.01f ) zoomLevel = 0.01f;
 		calculateView();
-		return false;
+		return true;
 	}
 	
 	private boolean onWindowResize(WindowResizeEvent e) {
 		aspectRatio = (float) e.getWidth() / (float) e.getHeight();
 		calculateView();
-		return false;
+		return true;
 	}
 	
 	private void calculateView() {

@@ -15,9 +15,9 @@ import Atlas.atlas.renderer.Framebuffer;
 import Atlas.atlas.renderer.FramebufferSpecification;
 import Atlas.atlas.renderer.OrthographicCameraController;
 import Atlas.atlas.renderer.Renderer2D;
+import Atlas.atlas.renderer.Renderer2DStorage.Statistics;
 import Atlas.atlas.renderer.RendererAPI;
 import Atlas.atlas.renderer.Texture2D;
-import Atlas.atlas.renderer.Renderer2DStorage.Statistics;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.ImGuiStyle;
@@ -39,7 +39,7 @@ public class EditorLayer extends Layer {
 	
 	private Framebuffer framebuffer;
 	private Vec2f viewportSize = new Vec2f();
-	
+	private boolean viewportFocused = false;
 	
 	public EditorLayer() {
 		super("Globe Editor");
@@ -63,7 +63,7 @@ public class EditorLayer extends Layer {
 
 	@Override
 	public void onUpdate(float delta) {
-		cameraController.onUpdate(delta);
+		if ( viewportFocused ) cameraController.onUpdate(delta);
 	}
 
 	@Override
@@ -158,6 +158,8 @@ public class EditorLayer extends Layer {
 		
 		ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
 		ImGui.begin("Viewport");
+		viewportFocused = ImGui.isWindowFocused();
+		Application.getInstance().getImGuiLayer().setBlockEvent(!viewportFocused);
 		ImVec2 viewportPanelsize = ImGui.getContentRegionAvail();
 		if( viewportPanelsize.x != viewportSize.getX() || viewportPanelsize.y != viewportSize.getY()) {
 			framebuffer.resize((int) viewportPanelsize.x, (int) viewportPanelsize.y);
@@ -175,9 +177,9 @@ public class EditorLayer extends Layer {
 
 	@Override
 	public void onEvent(Event event) {
+		cameraController.onEvent(event);
 		EventDispatcher dispatcher = new EventDispatcher(event);
 		dispatcher.dispatch(EventType.KeyPressed, (Event e) -> (onKeyPressed((KeyPressedEvent) e)));
-		cameraController.onEvent(event);
 	}
 	
 	public boolean onKeyPressed(KeyPressedEvent event) {

@@ -10,7 +10,6 @@ public class GlobeApp {
 		EditorLayer editor = new EditorLayer();
 		app.pushLayer(editor);
 		
-		app.init();
 		app.run();
 	}
 }

@@ -56,9 +56,7 @@ public class Application implements EventListener {
 		Renderer.init();
 		
 		layerStack = new LayerStack();
-	}
-	
-	public void init() {
+		
 		imGuiLayer = new ImGuiLayer();
 		pushLayer(imGuiLayer);
 	}
@@ -73,11 +71,20 @@ public class Application implements EventListener {
 		overlay.OnAttach();
 	}
 	
+	public ImGuiLayer getImGuiLayer() {
+		for (Layer layer: layerStack.getLayers() ) {
+			if ( layer.getClass() == ImGuiLayer.class) return (ImGuiLayer) layer;
+		}
+		return null;
+	}
+	
 	public void onEvent(Event e) {
 		EventDispatcher dispatcher = new EventDispatcher(e);
 		dispatcher.dispatch(Event.EventType.WindowClose, (Event event) -> (onWindowClose((WindowCloseEvent) event)));
 		
 		for ( Layer layer : layerStack.getLayers() ) {
+			if (e.handled)
+				break;
 			layer.onEvent(e);
 		}
 	}
@@ -109,9 +116,10 @@ public class Application implements EventListener {
 	}
 	
 	private void update() {
+		int delta = getDelta();
 		
 		for (Layer layer : layerStack.getLayers()) {
-			layer.onUpdate(getDelta());
+			layer.onUpdate(delta);
 		}
 		
 		updateFPS();

@@ -12,6 +12,7 @@ public class MouseMovedEvent extends Event {
 		this.x = x;
 		this.y = y;
 		this.dragged = dragged;
+		category = EventCategory.EventCategoryMouse;
 	}
 
 	public int getX() {

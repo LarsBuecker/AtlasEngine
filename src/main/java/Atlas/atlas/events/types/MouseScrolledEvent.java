@@ -11,5 +11,6 @@ public class MouseScrolledEvent extends Event {
 		super(Event.EventType.MouseScrolled);
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
+		category = EventCategory.EventCategoryMouse;
 	}
 }
