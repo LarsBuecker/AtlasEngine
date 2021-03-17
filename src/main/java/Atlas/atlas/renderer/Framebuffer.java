@@ -10,7 +10,11 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL45;
 
+import Atlas.atlas.core.Log;
+
 public class Framebuffer {
+	
+	private static final int MAX_FRAMEBUFFER_SIZE = 8192;
 	
 	private FramebufferSpecification spec;
 	private int rendererId = 0;
@@ -37,6 +41,12 @@ public class Framebuffer {
 	}
 	
 	public void resize(int width, int height) {
+		
+		if ( width <= 0 || height <= 0 || width > MAX_FRAMEBUFFER_SIZE || height > MAX_FRAMEBUFFER_SIZE) {
+			Log.coreLog("Attempted to resize framebuffer to " + width + ", " + height);
+			return;
+		}
+		
 		spec.width = width;
 		spec.height = height;
 		Invalidate();
