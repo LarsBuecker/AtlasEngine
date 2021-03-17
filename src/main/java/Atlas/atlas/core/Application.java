@@ -26,6 +26,22 @@ public class Application implements EventListener {
 	
 	private ImGuiLayer imGuiLayer;
 	
+	public Application(String name) {
+		if (instance != null) {
+			System.err.println("Application already exists!");
+			System.exit(1);
+		}
+		
+		instance = this;
+		
+		window = new Window(name, 1280, 720);
+		window.create();
+		
+		Renderer.init();
+		
+		layerStack = new LayerStack();
+	}
+	
 	public Application() {
 		if (instance != null) {
 			System.err.println("Application already exists!");

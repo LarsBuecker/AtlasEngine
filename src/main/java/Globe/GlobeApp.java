@@ -1,4 +1,4 @@
-package Atlas.globe;
+package Globe;
 
 import Atlas.atlas.core.Application;
 
